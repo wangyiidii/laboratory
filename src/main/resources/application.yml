@@ -1,0 +1,27 @@
+server:
+  port: 1170
+
+logging:
+  config: classpath:logback-pigeon.xml
+
+pigeon:
+  knife4j:
+    title: openapi在线接口文档 - 0.1.0
+    group: ''
+    description: openapi 在线接口文档
+    version: 1.0
+    contact:
+      name: yiidii
+      url: 'https://blog.yiidii.cn'
+      email: 'yd1141309981@gmail.com '
+  log:
+    ali:
+      endpoint: cn-beijing.log.aliyuncs.com
+      accessKeyId: LTAI4G1senWeQpPSrkD8AaWv
+      accessKeySecret: b0KXLMpiMQ1XYVRsAdR30acgbHpKz3
+      project: openapi-boot
+      logStore: openapi-prod
+    path: logs
+    level: INFO
+  strategy:
+    base-package: cn.yiidii.openapi.service
