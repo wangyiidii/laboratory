@@ -8,7 +8,7 @@
         <version>2.3.6.RELEASE</version>
     </parent>
     <groupId>cn.yiidii</groupId>
-    <artifactId>library</artifactId>
+    <artifactId>laboratory</artifactId>
     <version>0.1.0</version>
     <name>${project.artifactId}</name>
 
@@ -78,6 +78,11 @@
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>${zxing.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.2.10</version>
         </dependency>
     </dependencies>
 
