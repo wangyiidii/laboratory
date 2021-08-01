@@ -1,14 +1,23 @@
 server:
   port: 1170
 
+spring:
+  #autoconfigure:
+  #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/laboratory?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=UTC
+    password: 114130
+    username: root
+
 logging:
   config: classpath:logback-pigeon.xml
 
 pigeon:
   knife4j:
-    title: openapi在线接口文档 - 0.1.0
+    title: Lab在线接口文档 - 0.1.0
     group: ''
-    description: openapi 在线接口文档
+    description: Lab 在线接口文档
     version: 1.0
     contact:
       name: yiidii

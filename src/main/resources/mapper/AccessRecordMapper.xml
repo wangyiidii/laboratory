@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yiidii.openapi.mapper.AccessRecordMapper">
+
+    <select id="statistics" resultType="cn.yiidii.openapi.model.bo.system.AccessRecordBO">
+        SELECT
+            <if test="groups.contains(&quot;platform&quot;)">
+                platform platform,
+            </if>
+            <if test="groups.contains(&quot;browser&quot;)">
+                browser browser,
+            </if>
+        <if test="groups.contains(&quot;deviceName&quot;)">
+            device_name deviceName,
+        </if>
+            count( id ) count,
+            t2.total,
+            round( count( id ) / t2.total * 100, 2 ) rate
+        FROM
+            `access_record` t1
+            INNER JOIN ( SELECT count( 1 ) total FROM access_record ) t2 ON 1 = 1
+        <trim prefix="GROUP BY" prefixOverrides="," suffixOverrides=",">
+            <if test="groups.contains(&quot;platform&quot;)">
+                platform,
+            </if>
+            <if test="groups.contains(&quot;browser&quot;)">
+                browser,
+            </if>
+            <if test="groups.contains(&quot;deviceName&quot;)">
+                device_name,
+            </if>
+        </trim>
+
+    </select>
+    <select id="accessTrend" resultType="cn.yiidii.openapi.model.bo.system.AccessTrendBO">
+        SELECT
+            DATE_FORMAT( create_time, '%H' ) hour,
+            count( id ) num
+        FROM
+            access_record
+        GROUP BY
+            hour
+    </select>
+
+
+</mapper>
