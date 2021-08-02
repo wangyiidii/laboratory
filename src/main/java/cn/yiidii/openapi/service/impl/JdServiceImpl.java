@@ -218,14 +218,17 @@ public class JdServiceImpl implements IJdService {
      */
     private String trans2ImgBase64(String content) {
         final String userDir = System.getProperty("user.dir");
-        final File file = QrCodeUtil.generate(content, 300, 300, FileUtil.file(userDir + File.separator + "jdQrCode.jpg"));
+        File qrCodeFile = FileUtil.file(userDir + File.separator + "jdQrCode.jpg");
+        final File file = QrCodeUtil.generate(content, 300, 300, qrCodeFile);
         byte[] b;
         try {
             b = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+            return Base64.getEncoder().encodeToString(b);
         } catch (IOException e) {
             return null;
+        } finally {
+            FileUtil.del(qrCodeFile);
         }
-        return Base64.getEncoder().encodeToString(b);
     }
 
     private Map<String, String> transSetCookie2Map(List<String> setCookiesList) {
