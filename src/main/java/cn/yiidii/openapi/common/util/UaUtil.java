@@ -25,6 +25,7 @@ public class UaUtil {
     private static final String WIN = "win";
     private static final String ANDROID = "Android";
     private static final String IPHONE = "iPhone";
+    private static final String IPAD = "iPad";
     private static final String MAC = "Macintosh";
 
     private static final String REGX_WIN = "Windows\\s+\\w+\\s+[0-9\\.]+";
@@ -51,8 +52,7 @@ public class UaUtil {
                 info.setVersion(win[2]);
             } else if (StrUtil.containsAnyIgnoreCase(all, IPHONE)) {
                 // iPhone, iPhone无法获取版本号
-                String[] iphone = all.split("; ")[1].split(" ");
-                info.setName(iphone[1]);
+                info.setName(IPHONE);
             } else if (StrUtil.containsAnyIgnoreCase(all, ANDROID)) {
                 // Android
                 String[] split = all.split("; ");
@@ -66,9 +66,11 @@ public class UaUtil {
                 String[] mac = macInfo.split(" ");
                 info.setName(mac[1]);
                 info.setVersion(mac[4]);
-            } else {
+            } else if (StrUtil.containsAnyIgnoreCase(all, IPAD)) {
+                info.setName(IPAD);
             }
         } catch (Exception exception) {
+            return info;
         }
 
         // name model后处理
