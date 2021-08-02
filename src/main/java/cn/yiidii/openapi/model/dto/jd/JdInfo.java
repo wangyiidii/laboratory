@@ -27,5 +27,6 @@ public class JdInfo {
     private String qrCodeUrl;
     private String qrCodeBase64;
     private String cookie;
+    private String ua;
 
 }

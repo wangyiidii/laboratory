@@ -14,18 +14,21 @@ import cn.yiidii.pigeon.common.core.util.HttpClientUtil;
 import cn.yiidii.pigeon.common.core.util.dto.HttpClientResult;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author YiiDii Wang
@@ -34,9 +37,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("all")
 public class JdServiceImpl implements IJdService {
-
-    private static final String UA = "jdapp;android;10.0.5;11;0393465333165363-5333430323261366;network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36";
 
     /**
      * 获取京东信息
@@ -65,6 +67,7 @@ public class JdServiceImpl implements IJdService {
                 .header("Referer", "https://plogin.m.jd.com/login/login?appid=300&returnurl=https://wqlogin2.jd.com/passport/LoginRedirect?state=" + currMs
                         + "&returnurl=//home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport")
                 .header("Cookie", info.getPreCookie())
+                .header("User-Agent", info.getUa())
                 .execute();
         JSONObject respJo = JSONObject.parseObject(resp.body());
         int errCode = respJo.getInteger("errcode");
@@ -90,6 +93,7 @@ public class JdServiceImpl implements IJdService {
      * @throws Exception e
      */
     private JdInfo loginEntranceWithHttpClientUtil() throws Exception {
+        String ua = randomUa();
         long currMs = System.currentTimeMillis();
         String loginEntranceUrl = "https://plogin.m.jd.com/cgi-bin/mm/new_login_entrance?lang=chs&appid=300&returnurl=https://wq.jd.com/passport/LoginRedirect?state=" + currMs
                 + "&returnurl=https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport&_t=" + currMs;
@@ -101,7 +105,7 @@ public class JdServiceImpl implements IJdService {
         header.put("Accept-Language", "zh-cn");
         header.put("Referer", URLEncoder.encode("https://plogin.m.jd.com/login/login?appid=300&returnurl=https://wq.jd.com/passport/LoginRedirect?state=" + currMs
                 + "&returnurl=https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport", "utf-8"));
-        header.put("User-Agent", UA);
+        header.put("User-Agent", ua);
         header.put("Host", "plogin.m.jd.com");
         final HttpClientResult httpClientResult = HttpClientUtil.doGet(loginEntranceUrl, param, header);
         final String cookieStr = httpClientResult.getCookieStr();
@@ -122,6 +126,7 @@ public class JdServiceImpl implements IJdService {
                 .lsId(lsId)
                 .lsToken(lsToken)
                 .preCookie(StrUtil.format("guid={}; lang=chs; lsid={}; lstoken={};", gUid, lsId, lsToken))
+                .ua(ua)
                 .build();
     }
 
@@ -143,7 +148,7 @@ public class JdServiceImpl implements IJdService {
                 .header("Accept-Language", "zh-cn")
                 .header("Referer", URLEncoder.encode("https://plogin.m.jd.com/login/login?appid=300&returnurl=https://wq.jd.com/passport/LoginRedirect?state=" + currMs
                         + "&returnurl=https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport", "utf-8"))
-                .header("User-Agent", UA)
+                .header("User-Agent", randomUa())
                 .header("Host", "plogin.m.jd.com")
                 .execute();
         String sToken = JSONObject.parseObject(resp.body()).getString("s_token");
@@ -191,7 +196,7 @@ public class JdServiceImpl implements IJdService {
                 .header("Cookie", info.getPreCookie())
                 .header("Referer", "https://plogin.m.jd.com/login/login?appid=300&returnurl=https://wqlogin2.jd.com/passport/LoginRedirect?state=" + currMs
                         + "&returnurl=//home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport")
-                .header("User-Agent", UA)
+                .header("User-Agent", info.getUa())
                 .header("Host", "plogin.m.jd.com")
                 .execute();
         Map<String, String> setCookieKv = transSetCookie2Map(tokenResp.headerList("Set-Cookie"));
@@ -242,4 +247,15 @@ public class JdServiceImpl implements IJdService {
                         (s1, s2) -> s2
                 ));
     }
+
+    /**
+     * 时间戳UA
+     *
+     * @return jdapp ua
+     */
+    private String randomUa() {
+        long l = System.currentTimeMillis();
+        return StrUtil.format("jdapp;android;10.0.5;11;{}-{};network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36", l, l);
+    }
+
 }
