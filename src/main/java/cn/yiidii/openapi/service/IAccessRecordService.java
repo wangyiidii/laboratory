@@ -26,9 +26,15 @@ public interface IAccessRecordService extends IService<AccessRecord> {
      * 访问统计
      *
      * @param group group
+     * @param topN  topN
      * @return AccessRecordBO
      */
-    List<AccessRecordBO> statistic(String group);
+    List<AccessRecordBO> statistic(String group, Integer topN);
 
+    /**
+     * 访问趋势图
+     *
+     * @return AccessTrendBO
+     */
     List<AccessTrendBO> accessTrend();
 }

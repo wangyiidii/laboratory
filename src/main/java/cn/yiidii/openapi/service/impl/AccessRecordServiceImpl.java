@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -65,10 +66,12 @@ public class AccessRecordServiceImpl extends ServiceImpl<AccessRecordMapper, Acc
     }
 
     @Override
-    public List<AccessRecordBO> statistic(String group) {
+    public List<AccessRecordBO> statistic(String group, Integer topN) {
         // 默认按照平台和浏览器分组
         group = StrUtil.isEmpty(group) ? "platform,browser" : group;
-        return this.getBaseMapper().statistics(Arrays.asList(group.split(",")));
+        // topN默认值
+        topN = Objects.nonNull(topN) ? topN : 10;
+        return this.getBaseMapper().statistics(Arrays.asList(group.split(",")), topN);
     }
 
     @Override

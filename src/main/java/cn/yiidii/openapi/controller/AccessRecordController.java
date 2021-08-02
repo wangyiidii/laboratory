@@ -38,8 +38,8 @@ public class AccessRecordController {
 
     @GetMapping("statistics")
     @ApiOperation(value = "统计")
-    private R<List<AccessRecordBO>> statistics(@RequestParam String group) {
-        return R.ok(accessRecordService.statistic(group));
+    private R<List<AccessRecordBO>> statistics(@RequestParam String group, @RequestParam(required = false, defaultValue = "0") Integer topN) {
+        return R.ok(accessRecordService.statistic(group, topN));
     }
 
 

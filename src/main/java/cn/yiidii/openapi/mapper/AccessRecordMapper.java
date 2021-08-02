@@ -21,9 +21,10 @@ public interface AccessRecordMapper extends BaseMapper<AccessRecord> {
      * 访问记录统计
      *
      * @param groupList 分组
+     * @param topN      topN
      * @return AccessRecordBO
      */
-    List<AccessRecordBO> statistics(@Param("groups") List<String> groupList);
+    List<AccessRecordBO> statistics(@Param("groups") List<String> groupList, @Param("topN") Integer topN);
 
     /**
      * 访问趋势图

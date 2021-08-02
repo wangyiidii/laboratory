@@ -30,7 +30,7 @@
                 device_name,
             </if>
         </trim>
-
+        LIMIT #{topN}
     </select>
     <select id="accessTrend" resultType="cn.yiidii.openapi.model.bo.system.AccessTrendBO">
         SELECT
