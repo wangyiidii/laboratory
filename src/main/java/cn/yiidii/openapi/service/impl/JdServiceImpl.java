@@ -93,7 +93,8 @@ public class JdServiceImpl implements IJdService {
      * @throws Exception e
      */
     private JdInfo loginEntranceWithHttpClientUtil() throws Exception {
-        String ua = randomUa();
+//        String ua = randomUa();
+        String ua = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 SP-engine/2.14.0 main%2F1.0 baiduboxapp/11.18.0.16 (Baidu; P2 13.3.1) NABar/0.0";
         long currMs = System.currentTimeMillis();
         String loginEntranceUrl = "https://plogin.m.jd.com/cgi-bin/mm/new_login_entrance?lang=chs&appid=300&returnurl=https://wq.jd.com/passport/LoginRedirect?state=" + currMs
                 + "&returnurl=https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport&_t=" + currMs;
