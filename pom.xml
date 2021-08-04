@@ -18,6 +18,7 @@
         <hutool.version>5.6.6</hutool.version>
         <zxing.version>3.3.3</zxing.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
+        <jsoup.version>1.14.1</jsoup.version>
     </properties>
 
     <dependencies>
@@ -89,6 +90,11 @@
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
             <version>${UserAgentUtils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
         </dependency>
 
     </dependencies>
