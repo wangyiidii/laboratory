@@ -33,4 +33,4 @@ pigeon:
     path: logs
     level: INFO
   strategy:
-    base-package: cn.yiidii.openapi.service
+    base-package: cn.yiidii.openapi
