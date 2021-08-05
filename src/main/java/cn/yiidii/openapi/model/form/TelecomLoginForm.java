@@ -1,4 +1,4 @@
-package cn.yiidii.openapi.controller.form;
+package cn.yiidii.openapi.model.form;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

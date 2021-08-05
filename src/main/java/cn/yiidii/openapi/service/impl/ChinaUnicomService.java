@@ -9,21 +9,20 @@ import cn.hutool.http.HttpStatus;
 import cn.yiidii.openapi.common.constant.StrategyBizConstant;
 import cn.yiidii.openapi.common.util.IpUtil;
 import cn.yiidii.openapi.common.util.RSAUtil;
-import cn.yiidii.openapi.controller.form.TelecomLoginForm;
+import cn.yiidii.openapi.model.form.TelecomLoginForm;
 import cn.yiidii.openapi.service.ITelecomService;
 import cn.yiidii.pigeon.common.core.base.R;
 import cn.yiidii.pigeon.common.core.constant.StringPool;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import cn.yiidii.pigeon.common.strategy.annotation.HandlerType;
 import com.alibaba.fastjson.JSONObject;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * @author YiiDii Wang

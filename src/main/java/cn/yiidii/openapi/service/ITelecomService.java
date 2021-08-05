@@ -1,6 +1,6 @@
 package cn.yiidii.openapi.service;
 
-import cn.yiidii.openapi.controller.form.TelecomLoginForm;
+import cn.yiidii.openapi.model.form.TelecomLoginForm;
 import cn.yiidii.pigeon.common.core.base.R;
 
 /**

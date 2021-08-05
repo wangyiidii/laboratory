@@ -20,20 +20,23 @@ import lombok.RequiredArgsConstructor;
 @EqualsAndHashCode
 public class DouYinVideoVO {
 
+    private String randomId;
     private String shortId;
     private String author;
     private String avatar;
     private String signature;
-    private List<Video> videoList;
+    private Item video;
+    private Item image;
 
     @Data
     @Builder
     @RequiredArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode
-    public static class Video {
+    public static class Item {
 
         private String desc;
-        private List<String> videoAddrList;
+        private List<String> urlList;
     }
+
 }
