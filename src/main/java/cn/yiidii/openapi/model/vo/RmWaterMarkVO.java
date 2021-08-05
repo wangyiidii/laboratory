@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 抖音视频VO
+ * 去水印视频VO
  *
  * @author YiiDii Wang
  * @create 2021-08-04 12:26
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class DouYinVideoVO {
+public class RmWaterMarkVO {
 
     private String randomId;
     private String shortId;
@@ -36,6 +36,7 @@ public class DouYinVideoVO {
     public static class Item {
 
         private String desc;
+        private List<String> poster;
         private List<String> urlList;
     }
 

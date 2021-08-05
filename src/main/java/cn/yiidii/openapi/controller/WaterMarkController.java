@@ -2,7 +2,7 @@ package cn.yiidii.openapi.controller;
 
 import cn.yiidii.openapi.component.wm.BaseRmWaterMarkHandler;
 import cn.yiidii.openapi.model.form.RmWaterMarkForm;
-import cn.yiidii.openapi.model.vo.DouYinVideoVO;
+import cn.yiidii.openapi.model.vo.RmWaterMarkVO;
 import cn.yiidii.pigeon.common.core.base.R;
 import cn.yiidii.pigeon.common.core.util.SpringContextHolder;
 import cn.yiidii.pigeon.common.strategy.component.HandlerContext;
@@ -32,10 +32,15 @@ public class WaterMarkController {
 
     @PostMapping
     @ApiOperation("去水印")
-    public R<List<DouYinVideoVO>> rmDouYinWaterMark(@RequestBody @Validated RmWaterMarkForm form) {
+    public R<List<RmWaterMarkVO>> rmDouYinWaterMark(@RequestBody @Validated RmWaterMarkForm form) {
         String beanName = handlerContext.getBeanName(form.getBizCode());
         BaseRmWaterMarkHandler handler = SpringContextHolder.getBean(beanName, BaseRmWaterMarkHandler.class);
-        return R.ok(handler.remove(form.getLinks()));
+        try {
+            return R.ok(handler.remove(form.getLinks()));
+        } catch (Exception exception) {
+            return R.failed("换个链接试试吧~");
+        }
+
     }
 
 }

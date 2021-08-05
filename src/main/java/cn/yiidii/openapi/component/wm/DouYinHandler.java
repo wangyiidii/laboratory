@@ -4,10 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.yiidii.openapi.model.vo.DouYinVideoVO;
-import cn.yiidii.openapi.model.vo.DouYinVideoVO.DouYinVideoVOBuilder;
-import cn.yiidii.openapi.model.vo.DouYinVideoVO.Item;
-import cn.yiidii.openapi.model.vo.DouYinVideoVO.Item.ItemBuilder;
+import cn.yiidii.openapi.model.vo.RmWaterMarkVO;
+import cn.yiidii.openapi.model.vo.RmWaterMarkVO.Item;
+import cn.yiidii.openapi.model.vo.RmWaterMarkVO.Item.ItemBuilder;
+import cn.yiidii.openapi.model.vo.RmWaterMarkVO.RmWaterMarkVOBuilder;
 import cn.yiidii.pigeon.common.core.util.SpringContextHolder;
 import cn.yiidii.pigeon.common.strategy.annotation.HandlerType;
 import com.alibaba.fastjson.JSON;
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
  */
 @HandlerType(bizCode = WaterMarkConstant.DOUYIN_RM_WATER_MARK, beanName = WaterMarkConstant.DOUYIN_RM_WATER_MARK)
 @Component(WaterMarkConstant.DOUYIN_RM_WATER_MARK)
-public class DouYinHandler implements BaseRmWaterMarkHandler<DouYinVideoVO> {
+public class DouYinHandler implements BaseRmWaterMarkHandler<RmWaterMarkVO> {
 
     private static final String DY_VIDEO_PATH = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/?item_ids=";
 
@@ -43,7 +43,7 @@ public class DouYinHandler implements BaseRmWaterMarkHandler<DouYinVideoVO> {
      * @return 去水印VO
      */
     @Override
-    public List<DouYinVideoVO> remove(List<String> linkList) {
+    public List<RmWaterMarkVO> remove(List<String> linkList) {
         List<String> itemIdList = getItemIdFromShortLink(linkList);
         return getVideo(itemIdList);
     }
@@ -81,9 +81,9 @@ public class DouYinHandler implements BaseRmWaterMarkHandler<DouYinVideoVO> {
      * 获取视频地址
      *
      * @param itemIdList 获取itemId
-     * @return DouYinVideoVO
+     * @return 去水印VO
      */
-    private static List<DouYinVideoVO> getVideo(List<String> itemIdList) {
+    private static List<RmWaterMarkVO> getVideo(List<String> itemIdList) {
         String idStr = CollUtil.join(itemIdList, ",");
         HttpResponse resp = HttpRequest.get(DY_VIDEO_PATH + idStr)
                 .header(HttpHeaders.USER_AGENT, WaterMarkConstant.MOBILE_UA)
@@ -96,7 +96,7 @@ public class DouYinHandler implements BaseRmWaterMarkHandler<DouYinVideoVO> {
         JSONArray itemList = JSONObject.parseObject(resp.body()).getJSONArray("item_list");
         return itemList.stream().map(e -> {
             JSONObject info = (JSONObject) e;
-            DouYinVideoVOBuilder builder = DouYinVideoVO.builder();
+            RmWaterMarkVOBuilder builder = RmWaterMarkVO.builder();
             builder.randomId(RandomUtil.randomString(12));
             // 作者基本信息
             JSONObject author = info.getJSONObject("author");
@@ -114,8 +114,10 @@ public class DouYinHandler implements BaseRmWaterMarkHandler<DouYinVideoVO> {
             List<String> urlList;
             if (isVideo) {
                 JSONArray urlJa = info.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list");
+                JSONArray poster = info.getJSONObject("video").getJSONObject("dynamic_cover").getJSONArray("url_list");
                 urlList = JSONArray.parseArray(JSON.toJSONString(urlJa), String.class);
                 urlList = urlList.stream().map(url -> url.replace("playwm", "play")).collect(Collectors.toList());
+                itemBuilder.poster(JSONArray.parseArray(JSON.toJSONString(poster), String.class));
             } else {
                 urlList = info.getJSONArray("images").stream().map(imgObj -> {
                     JSONObject imgJo = (JSONObject) imgObj;
