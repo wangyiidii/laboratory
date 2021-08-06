@@ -1,9 +1,12 @@
 package cn.yiidii.openapi.service;
 
+import cn.yiidii.openapi.model.bo.system.AccessOverviewBO;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
+import cn.yiidii.openapi.model.vo.AccessOverviewVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -37,4 +40,11 @@ public interface IAccessRecordService extends IService<AccessRecord> {
      * @return AccessTrendBO
      */
     List<AccessTrendBO> accessTrend();
+
+    /**
+     * 访问概览
+     *
+     * @return AccessOverviewBO
+     */
+    AccessOverviewVO getAccessOverview();
 }

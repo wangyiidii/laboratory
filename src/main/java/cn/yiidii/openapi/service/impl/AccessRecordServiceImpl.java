@@ -1,5 +1,7 @@
 package cn.yiidii.openapi.service.impl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
@@ -7,14 +9,18 @@ import cn.yiidii.openapi.common.util.IpUtil;
 import cn.yiidii.openapi.common.util.UaUtil;
 import cn.yiidii.openapi.common.util.UaUtil.DeviceInfo;
 import cn.yiidii.openapi.mapper.AccessRecordMapper;
+import cn.yiidii.openapi.model.bo.system.AccessOverviewBO;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
+import cn.yiidii.openapi.model.vo.AccessOverviewVO;
 import cn.yiidii.openapi.service.IAccessRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -88,5 +94,28 @@ public class AccessRecordServiceImpl extends ServiceImpl<AccessRecordMapper, Acc
                 .sorted(Comparator.comparing(AccessTrendBO::getHour))
                 .collect(Collectors.toList());
         return accessTrendBOList;
+    }
+
+    /**
+     * 访问趋势图
+     *
+     * @return AccessTrendBO
+     */
+    @Override
+    public AccessOverviewVO  getAccessOverview() {
+        Date d = new Date();
+        final ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime start = LocalDateTime.ofInstant(DateUtil.beginOfDay(d).toJdkDate().toInstant(), zone);
+        LocalDateTime end = LocalDateTime.ofInstant(DateUtil.endOfDay(d).toJdkDate().toInstant(), zone);
+        AccessOverviewBO todayData = this.getBaseMapper().getAccessOverview(start, end);
+
+        d = DateUtil.offsetDay(d, -1).toJdkDate();
+        start = LocalDateTime.ofInstant(DateUtil.beginOfDay(d).toJdkDate().toInstant(), zone);
+        end = LocalDateTime.ofInstant(DateUtil.endOfDay(d).toJdkDate().toInstant(), zone);
+        AccessOverviewBO yesterdayData = this.getBaseMapper().getAccessOverview(start, end);
+
+        AccessOverviewBO allData = this.getBaseMapper().getAccessOverview(start, end);
+
+        return AccessOverviewVO.builder().today(todayData).yesterday(yesterdayData).all(allData).build();
     }
 }

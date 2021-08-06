@@ -1,9 +1,11 @@
 package cn.yiidii.openapi.mapper;
 
+import cn.yiidii.openapi.model.bo.system.AccessOverviewBO;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,5 +34,14 @@ public interface AccessRecordMapper extends BaseMapper<AccessRecord> {
      * @return AccessTrendBO
      */
     List<AccessTrendBO> accessTrend();
+
+    /**
+     * 访问概览
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return AccessOverviewBO
+     */
+    AccessOverviewBO getAccessOverview(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
 }

@@ -3,6 +3,7 @@ package cn.yiidii.openapi.controller;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
+import cn.yiidii.openapi.model.vo.AccessOverviewVO;
 import cn.yiidii.openapi.service.IAccessRecordService;
 import cn.yiidii.pigeon.common.core.base.R;
 import com.alibaba.fastjson.JSONObject;
@@ -54,4 +55,11 @@ public class AccessRecordController {
         result.put("y", y);
         return R.ok(result);
     }
+
+    @GetMapping("overview")
+    @ApiOperation(value = "概览")
+    private R<AccessOverviewVO> overview() {
+        return R.ok(accessRecordService.getAccessOverview());
+    }
+
 }

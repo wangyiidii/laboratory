@@ -42,5 +42,17 @@
             hour
     </select>
 
+    <select id="getAccessOverview" resultType="cn.yiidii.openapi.model.bo.system.AccessOverviewBO">
+        SELECT
+            count(id) pv,
+            count(DISTINCT ( ip )) uv,
+            count(ip) ipCount
+        FROM
+            access_record
+        <if test="startTime != null and endTime != null">
+            WHERE create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+
 
 </mapper>
