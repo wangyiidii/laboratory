@@ -38,10 +38,11 @@ public interface AccessRecordMapper extends BaseMapper<AccessRecord> {
     /**
      * 访问概览
      *
+     * @param path 开始时间
      * @param startTime 开始时间
      * @param endTime   结束时间
      * @return AccessOverviewBO
      */
-    AccessOverviewBO getAccessOverview(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+    AccessOverviewBO getAccessOverview(@Param("path")String path, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
 }

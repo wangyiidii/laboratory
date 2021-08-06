@@ -1,6 +1,5 @@
 package cn.yiidii.openapi.service.impl;
 
-import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
@@ -13,6 +12,7 @@ import cn.yiidii.openapi.model.bo.system.AccessOverviewBO;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
+import cn.yiidii.openapi.model.form.AccessRecordForm;
 import cn.yiidii.openapi.model.vo.AccessOverviewVO;
 import cn.yiidii.openapi.service.IAccessRecordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,8 +28,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 访问记录业务实现
@@ -46,27 +48,30 @@ public class AccessRecordServiceImpl extends ServiceImpl<AccessRecordMapper, Acc
     private final HttpServletRequest request;
 
     @Override
-    public AccessRecord addOne(String uaStr) {
+    @Transactional(rollbackFor = Exception.class)
+    public AccessRecord addOne(AccessRecordForm form) {
+        String uaStr = form.getUaStr();
         uaStr = StrUtil.isEmpty(uaStr) ? request.getHeader(HttpHeaders.USER_AGENT) : uaStr;
+        form.setUaStr(uaStr);
+        AccessRecord record = new AccessRecord();
+        BeanUtils.copyProperties(form, record);
+
         UserAgent ua = UserAgentUtil.parse(uaStr);
         String ip = ipUtil.getIpAddr(request);
         String loc = ipUtil.getLocationByIp(ip);
         DeviceInfo deviceInfo = UaUtil.getDeviceInfo(uaStr);
-        AccessRecord record = AccessRecord.builder()
-                .ip(ip)
-                .loc(loc)
-                .os(ua.getOs().getName())
-                .platform(ua.getPlatform().getName())
-                .browser(ua.getBrowser().getName())
-                .version(ua.getVersion())
-                .deviceName(deviceInfo.getName())
-                .deviceModel(deviceInfo.getModel())
-                .deviceVersion(deviceInfo.getVersion())
-                .engine(ua.getEngine().getName())
-                .engineVersion(ua.getEngineVersion())
-                .uaStr(uaStr)
-                .createTime(LocalDateTime.now())
-                .build();
+        record.setIp(ip)
+                .setLoc(loc)
+                .setOs(ua.getOs().getName())
+                .setPlatform(ua.getPlatform().getName())
+                .setBrowser(ua.getBrowser().getName())
+                .setVersion(ua.getVersion())
+                .setDeviceName(deviceInfo.getName())
+                .setDeviceModel(deviceInfo.getModel())
+                .setDeviceVersion(deviceInfo.getVersion())
+                .setEngine(ua.getEngine().getName())
+                .setEngineVersion(ua.getEngineVersion())
+                .setCreateTime(LocalDateTime.now());
         this.save(record);
         return record;
     }
@@ -102,22 +107,22 @@ public class AccessRecordServiceImpl extends ServiceImpl<AccessRecordMapper, Acc
      * @return AccessTrendBO
      */
     @Override
-    public AccessOverviewVO  getAccessOverview() {
+    public AccessOverviewVO getAccessOverview(String path) {
         Date d = new Date();
         final ZoneId zone = ZoneId.systemDefault();
         // 今
         LocalDateTime start = LocalDateTime.ofInstant(DateUtil.beginOfDay(d).toJdkDate().toInstant(), zone);
         LocalDateTime end = LocalDateTime.ofInstant(DateUtil.endOfDay(d).toJdkDate().toInstant(), zone);
-        AccessOverviewBO todayData = this.getBaseMapper().getAccessOverview(start, end);
+        AccessOverviewBO todayData = this.getBaseMapper().getAccessOverview(path, start, end);
 
         // 昨
         d = DateUtil.offsetDay(d, -1).toJdkDate();
         start = LocalDateTime.ofInstant(DateUtil.beginOfDay(d).toJdkDate().toInstant(), zone);
         end = LocalDateTime.ofInstant(DateUtil.endOfDay(d).toJdkDate().toInstant(), zone);
-        AccessOverviewBO yesterdayData = this.getBaseMapper().getAccessOverview(start, end);
+        AccessOverviewBO yesterdayData = this.getBaseMapper().getAccessOverview(path, start, end);
 
         // 总
-        AccessOverviewBO allData = this.getBaseMapper().getAccessOverview(null, null);
+        AccessOverviewBO allData = this.getBaseMapper().getAccessOverview(path, null, null);
 
         return AccessOverviewVO.builder().today(todayData).yesterday(yesterdayData).all(allData).build();
     }

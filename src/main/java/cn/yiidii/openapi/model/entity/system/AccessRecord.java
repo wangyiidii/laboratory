@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
  * @create 2021-07-31 23:28
  */
 @Data
+@Accessors(chain = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +25,10 @@ import lombok.experimental.SuperBuilder;
 public class AccessRecord extends SuperEntity<Long> {
 
     private static final long serialVersionUID = 1L;
+
+    private String path;
+
+    private String queryString;
 
     private String ip;
 

@@ -3,6 +3,7 @@ package cn.yiidii.openapi.controller;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
+import cn.yiidii.openapi.model.form.AccessRecordForm;
 import cn.yiidii.openapi.model.vo.AccessOverviewVO;
 import cn.yiidii.openapi.service.IAccessRecordService;
 import cn.yiidii.pigeon.common.core.base.R;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +34,8 @@ public class AccessRecordController {
 
     @PostMapping
     @ApiOperation(value = "添加一个访问记录")
-    private R<AccessRecord> saveOne() {
-        AccessRecord record = accessRecordService.addOne(null);
+    private R<AccessRecord> saveOne(@RequestBody AccessRecordForm form) {
+        AccessRecord record = accessRecordService.addOne(form);
         return R.ok(record);
     }
 
@@ -58,8 +60,8 @@ public class AccessRecordController {
 
     @GetMapping("overview")
     @ApiOperation(value = "概览")
-    private R<AccessOverviewVO> overview() {
-        return R.ok(accessRecordService.getAccessOverview());
+    private R<AccessOverviewVO> overview(@RequestParam(required = false, defaultValue = "/") String path) {
+        return R.ok(accessRecordService.getAccessOverview(path));
     }
 
 }

@@ -4,21 +4,21 @@
 
     <select id="statistics" resultType="cn.yiidii.openapi.model.bo.system.AccessRecordBO">
         SELECT
-            <if test="groups.contains(&quot;platform&quot;)">
-                platform platform,
-            </if>
-            <if test="groups.contains(&quot;browser&quot;)">
-                browser browser,
-            </if>
+        <if test="groups.contains(&quot;platform&quot;)">
+            platform platform,
+        </if>
+        <if test="groups.contains(&quot;browser&quot;)">
+            browser browser,
+        </if>
         <if test="groups.contains(&quot;deviceName&quot;)">
             device_name deviceName,
         </if>
-            count( id ) count,
-            t2.total,
-            round( count( id ) / t2.total * 100, 2 ) rate
+        count( id ) count,
+        t2.total,
+        round( count( id ) / t2.total * 100, 2 ) rate
         FROM
-            `access_record` t1
-            INNER JOIN ( SELECT count( 1 ) total FROM access_record ) t2 ON 1 = 1
+        `access_record` t1
+        INNER JOIN ( SELECT count( 1 ) total FROM access_record ) t2 ON 1 = 1
         <trim prefix="GROUP BY" prefixOverrides="," suffixOverrides=",">
             <if test="groups.contains(&quot;platform&quot;)">
                 platform,
@@ -33,25 +33,29 @@
         LIMIT #{topN}
     </select>
     <select id="accessTrend" resultType="cn.yiidii.openapi.model.bo.system.AccessTrendBO">
-        SELECT
-            DATE_FORMAT( create_time, '%H' ) hour,
-            count( id ) num
-        FROM
-            access_record
+        SELECT DATE_FORMAT(create_time, '%H') hour,
+               count(id) num
+        FROM access_record
         GROUP BY
             hour
     </select>
 
     <select id="getAccessOverview" resultType="cn.yiidii.openapi.model.bo.system.AccessOverviewBO">
         SELECT
-            count(id) pv,
-            count(DISTINCT ( ip )) uv,
-            count(ip) ipCount
+        count(id) pv,
+        count(DISTINCT ( ip )) uv,
+        count(ip) ipCount
         FROM
-            access_record
-        <if test="startTime != null and endTime != null">
-            WHERE create_time BETWEEN #{startTime} AND #{endTime}
-        </if>
+        access_record
+        <trim prefix="WHERE" prefixOverrides="AND" suffixOverrides="AND">
+            <if test="startTime != null and endTime != null">
+                create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="path != null ">
+                AND `path` = #{path}
+            </if>
+        </trim>
+
     </select>
 
 

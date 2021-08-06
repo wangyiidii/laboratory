@@ -4,6 +4,7 @@ import cn.yiidii.openapi.model.bo.system.AccessOverviewBO;
 import cn.yiidii.openapi.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.model.entity.system.AccessRecord;
+import cn.yiidii.openapi.model.form.AccessRecordForm;
 import cn.yiidii.openapi.model.vo.AccessOverviewVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.time.LocalDateTime;
@@ -20,10 +21,10 @@ public interface IAccessRecordService extends IService<AccessRecord> {
     /**
      * 添加一条记录
      *
-     * @param uaStr ua
+     * @param form form
      * @return AccessRecord
      */
-    AccessRecord addOne(String uaStr);
+    AccessRecord addOne(AccessRecordForm form);
 
     /**
      * 访问统计
@@ -44,7 +45,8 @@ public interface IAccessRecordService extends IService<AccessRecord> {
     /**
      * 访问概览
      *
+     * @param path 路径
      * @return AccessOverviewBO
      */
-    AccessOverviewVO getAccessOverview();
+    AccessOverviewVO getAccessOverview(String path);
 }
