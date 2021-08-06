@@ -105,16 +105,19 @@ public class AccessRecordServiceImpl extends ServiceImpl<AccessRecordMapper, Acc
     public AccessOverviewVO  getAccessOverview() {
         Date d = new Date();
         final ZoneId zone = ZoneId.systemDefault();
+        // 今
         LocalDateTime start = LocalDateTime.ofInstant(DateUtil.beginOfDay(d).toJdkDate().toInstant(), zone);
         LocalDateTime end = LocalDateTime.ofInstant(DateUtil.endOfDay(d).toJdkDate().toInstant(), zone);
         AccessOverviewBO todayData = this.getBaseMapper().getAccessOverview(start, end);
 
+        // 昨
         d = DateUtil.offsetDay(d, -1).toJdkDate();
         start = LocalDateTime.ofInstant(DateUtil.beginOfDay(d).toJdkDate().toInstant(), zone);
         end = LocalDateTime.ofInstant(DateUtil.endOfDay(d).toJdkDate().toInstant(), zone);
         AccessOverviewBO yesterdayData = this.getBaseMapper().getAccessOverview(start, end);
 
-        AccessOverviewBO allData = this.getBaseMapper().getAccessOverview(start, end);
+        // 总
+        AccessOverviewBO allData = this.getBaseMapper().getAccessOverview(null, null);
 
         return AccessOverviewVO.builder().today(todayData).yesterday(yesterdayData).all(allData).build();
     }
