@@ -82,6 +82,12 @@
             <version>${pigeon.common.version}</version>
         </dependency>
         <dependency>
+            <groupId>cn.yiidii.pigeon</groupId>
+            <artifactId>pigeon-starter-redis</artifactId>
+            <version>${pigeon.common.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>${zxing.version}</version>

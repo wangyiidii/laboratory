@@ -9,6 +9,10 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/laboratory?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=UTC
     password: 114130
     username: root
+  redis:
+    password: 123465
+    host: 127.0.0.1
+    database: 0
 
 logging:
   config: classpath:logback-pigeon.xml
@@ -26,10 +30,10 @@ pigeon:
   log:
     ali:
       endpoint: cn-beijing.log.aliyuncs.com
-      accessKeyId: LTAI4G1senWeQpPSrkD8AaWv
-      accessKeySecret: b0KXLMpiMQ1XYVRsAdR30acgbHpKz3
-      project: openapi-boot
-      logStore: openapi-prod
+      accessKeyId: LT******Wv
+      accessKeySecret: b0******z3
+      project: xxx
+      logStore: xxx
     path: logs
     level: INFO
   strategy:
