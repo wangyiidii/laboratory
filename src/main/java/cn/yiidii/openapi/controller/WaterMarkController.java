@@ -1,5 +1,6 @@
 package cn.yiidii.openapi.controller;
 
+import cn.yiidii.openapi.common.annotation.FlowLimit;
 import cn.yiidii.openapi.component.wm.BaseRmWaterMarkHandler;
 import cn.yiidii.openapi.model.form.RmWaterMarkForm;
 import cn.yiidii.openapi.model.vo.RmWaterMarkVO;
@@ -9,6 +10,7 @@ import cn.yiidii.pigeon.common.strategy.component.HandlerContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +34,7 @@ public class WaterMarkController {
 
     @PostMapping
     @ApiOperation("去水印")
+    @FlowLimit(interval = 2L, unit = TimeUnit.SECONDS)
     public R<List<RmWaterMarkVO>> rmDouYinWaterMark(@RequestBody @Validated RmWaterMarkForm form) {
         String beanName = handlerContext.getBeanName(form.getBizCode());
         BaseRmWaterMarkHandler handler = SpringContextHolder.getBean(beanName, BaseRmWaterMarkHandler.class);
