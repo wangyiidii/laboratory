@@ -19,7 +19,7 @@
         <zxing.version>3.3.3</zxing.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <jsoup.version>1.14.1</jsoup.version>
-        <netty-all.version>4.1.42.Final</netty-all.version>
+        <netty-all.version>4.1.54.Final</netty-all.version>
         <protobuf.version>3.17.3</protobuf.version>
         <netty-websocket-starter.version>0.11.0</netty-websocket-starter.version>
     </properties>
