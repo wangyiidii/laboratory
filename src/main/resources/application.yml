@@ -44,3 +44,7 @@ pigeon:
       server:
         path: /ws/im
         port: 7880
+    agent:
+      server:
+        port: 7890
+        idleTime: 10
