@@ -22,9 +22,19 @@ public interface IJdService {
      * 检查二维码是否扫描
      *
      * @param info info
-     * @throws Exception e
      * @return JdInfo
+     * @throws Exception e
      */
     JdInfo checkLogin(JdInfo info) throws Exception;
 
+    /**
+     * 通过wsKey获取cookie
+     * <p/>
+     * wsKey通过抓JD app包获取
+     *
+     * @param wsKey wsKey
+     * @return JdInfo
+     * @throws Exception
+     */
+    JdInfo getByWsKey(String wsKey) throws Exception;
 }

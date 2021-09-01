@@ -1,9 +1,12 @@
 package cn.yiidii.openapi.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.yiidii.openapi.model.dto.jd.JdInfo;
@@ -17,6 +20,7 @@ import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -84,6 +88,41 @@ public class JdServiceImpl implements IJdService {
         String cookie = StrUtil.format("pt_key={}; pt_pin={};", ptKey, ptPin);
         info.setCookie(cookie);
         return info;
+    }
+
+    @Override
+    public JdInfo getByWsKey(String key) throws Exception {
+        // genToken的body参数
+        JSONObject jo = new JSONObject();
+        jo.put("action", "to");
+        jo.put("to", cn.hutool.core.net.URLEncoder.ALL.encode("https://plogin.m.jd.com/cgi-bin/m/thirdapp_auth_page?token=AAEAIEijIw6wxF2s3bNKF0bmGsI8xfw6hkQT6Ui2QVP7z1Xg&client_type=android&appid=879&appup_type=1", Charset.forName(CharsetUtil.UTF_8)));
+        // 请求genToken接口获取
+        String body = HttpRequest.post("https://api.m.jd.com:443/client.action?functionId=genToken&clientVersion=10.1.2&client=android&lang=zh_CN&uuid=09d53a5653402b1f&st=1630392618706&sign=53904736db53eebc01ca70036e7187d6&sv=120")
+                .header(Header.COOKIE, key)
+                .body(StrUtil.format("body={}", cn.hutool.core.net.URLEncoder.ALL.encode(jo.toJSONString(), Charset.forName(CharsetUtil.UTF_8))), ContentType.FORM_URLENCODED.getValue())
+                .execute().body();
+        JSONObject bodyJo = JSONObject.parseObject(body);
+
+        // 跳转参数
+        Map<String, Object> prams = Maps.newHashMap();
+        prams.put("tokenKey", bodyJo.getString("tokenKey"));
+        prams.put("to", "https://plogin.m.jd.com/cgi-bin/m/thirdapp_auth_page?token=AAEAIEijIw6wxF2s3bNKF0bmGsI8xfw6hkQT6Ui2QVP7z1Xg");
+        prams.put("client_type", "android");
+        prams.put("appid", 879);
+        prams.put("appup_type", 1);
+        String paramStr = CollUtil.join(prams.entrySet().stream().map(e -> StrUtil.format("{}={}", e.getKey(), e.getValue())).collect(Collectors.toList()), "&");
+        // 302重定向
+        String jmpUrl = StrUtil.format("{}?{}", bodyJo.getString("url"), paramStr);
+        HttpResponse response = HttpRequest.get(jmpUrl).execute();
+        String ptKey = response.getCookie("pt_key").getValue();
+        String ptPin = response.getCookie("pt_pin").getValue();
+        if (StrUtil.contains(ptKey, "fake_") || StrUtil.contains(ptPin, "***")) {
+            throw new JdException(-1, "非法faker用户");
+        }
+        return JdInfo.builder()
+                .preCookie(response.getCookieStr())
+                .cookie(StrUtil.format("pt_key={}; pt_pin={}", ptKey, ptPin))
+                .build();
     }
 
     /**
