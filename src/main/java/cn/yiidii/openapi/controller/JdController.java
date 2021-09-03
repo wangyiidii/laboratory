@@ -47,6 +47,7 @@ public class JdController {
     }
 
     @GetMapping("cookie")
+    @Deprecated
     @ApiOperation(value = "获取cookie(通过wsKey)")
     public R<JdInfo> cookie(@RequestParam @Pattern(regexp = "pin=[^;]+;[ ]?wskey=[^;]+;", message = "格式不正确(pin=xxx; wskey=xxx;)") String key) throws Exception {
         return R.ok(jdService.getByWsKey(key), "获取cookie成功");

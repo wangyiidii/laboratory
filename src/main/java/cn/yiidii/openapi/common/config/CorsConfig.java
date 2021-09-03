@@ -1,8 +1,11 @@
 package cn.yiidii.openapi.common.config;
 
+import cn.yiidii.openapi.controller.interceptor.DeprecatedApiInterceptor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -13,7 +16,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class CorsConfig implements WebMvcConfigurer {
+
+    private final DeprecatedApiInterceptor deprecatedApiInterceptor;
 
     /**
      * 开启跨域
@@ -31,5 +37,15 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 // 跨域允许时间
                 .maxAge(3600);
+    }
+
+    /**
+     * 拦截器
+     *
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(deprecatedApiInterceptor);
     }
 }
