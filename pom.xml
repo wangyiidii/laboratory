@@ -25,6 +25,7 @@
         <jsch.version>0.1.55</jsch.version>
         <commom-net.version>3.8.0</commom-net.version>
         <dom4j.version>2.1.3</dom4j.version>
+        <selenium.version>3.141.59</selenium.version>
     </properties>
 
     <dependencies>
@@ -145,6 +146,12 @@
             <artifactId>dom4j</artifactId>
             <version>${dom4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
 
     </dependencies>
 

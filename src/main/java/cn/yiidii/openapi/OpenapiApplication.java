@@ -4,6 +4,7 @@ import cn.yiidii.pigeon.common.knife4j.annotation.EnablePigeonKnife4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Openapi启动类
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = "cn.yiidii")
 @EnablePigeonKnife4j
+@EnableScheduling
 public class OpenapiApplication {
 
     public static void main(String[] args) {
