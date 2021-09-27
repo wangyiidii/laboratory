@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * JD chrome session model
@@ -60,12 +61,21 @@ public class JdChromeSession {
      * @param code 验证码
      */
     public void login(String code) {
+        checkDialog();
         // ctrl + a 输入验证码
         WebDriverUtil.input(this.getRemoteWebDriver(), By.id("authcode"), code, false);
         // 选中同意策略
         this.clickPolicy();
         // 点击登录
         WebDriverUtil.click(this.getRemoteWebDriver(), By.xpath("//a[@report-eventid='MLoginRegister_SMSLogin']"));
+        // 2秒的时间, 等待toast, 主要是验证码错误的弹框
+        WebDriverWait wait = new WebDriverWait(this.remoteWebDriver, 2, 100);
+        try {
+            WebElement msgContainer = wait.until(driver -> driver.findElement(By.className("msg_container")));
+            throw new JdException(-1, msgContainer.getText());
+        } catch (Exception exception) {
+            log.error(StrUtil.format("未发现登录异常的toast"));
+        }
         checkDialog();
     }
 
@@ -76,7 +86,7 @@ public class JdChromeSession {
      * dialog点击确定, 部分抛出异常（例如: 短信验证码发送次数已达上限 等）
      */
     public void checkDialog() {
-        // dialog
+        // 可能会弹框, 点击确定; 部分抛出异常
         By dialogDesBy = By.className("dialog-des");
         boolean isDialogDescExist = WebDriverUtil.isElementExist(this.getRemoteWebDriver(), dialogDesBy);
         if (isDialogDescExist) {
@@ -87,13 +97,12 @@ public class JdChromeSession {
             // 描述
             String dialogDesc = dialogDescEle.getText();
             log.error(StrUtil.format("dialogDesc: {}", dialogDesc));
-            // 点击确定
-            dialogSureEle.click();
             if (StrUtil.containsAnyIgnoreCase(dialogDesc,
                     "对不起，短信验证码发送次数已达上限，请24小时后再试。")) {
-
                 throw new JdException(-1, dialogDesc);
             }
+            // 点击确定
+            dialogSureEle.click();
         }
     }
 
@@ -115,7 +124,6 @@ public class JdChromeSession {
             return;
         }
         throw new JdException(-1, "无法发送验证码, 请重新获取试试看!");
-
     }
 
 }

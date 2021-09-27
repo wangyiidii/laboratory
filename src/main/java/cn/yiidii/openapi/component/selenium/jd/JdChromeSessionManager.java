@@ -163,9 +163,10 @@ public class JdChromeSessionManager {
         JdChromeSession session = this.get(sid);
         RemoteWebDriver webDriver = session.getRemoteWebDriver();
         // 等待20
-        WebDriverWait wait = new WebDriverWait(webDriver, 20);
-        Boolean succ = wait.until(ExpectedConditions.titleContains("多快好省"));
-        if (!succ) {
+        WebDriverWait wait = new WebDriverWait(webDriver, 5);
+        try {
+            wait.until(ExpectedConditions.titleContains("多快好省"));
+        } catch (Exception exception) {
             throw new JdException(-1, "登录失败");
         }
         // 尝试获取pt_key和pt_pin

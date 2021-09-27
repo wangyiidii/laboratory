@@ -3,6 +3,7 @@ package cn.yiidii.openapi.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.PhoneUtil;
+import cn.yiidii.openapi.common.annotation.FlowLimit;
 import cn.yiidii.openapi.component.selenium.jd.JdChromeSessionManager;
 import cn.yiidii.openapi.model.dto.jd.JdInfo;
 import cn.yiidii.openapi.model.form.jd.JdChromeLoginForm;
@@ -65,6 +66,7 @@ public class JdController {
     }
 
     @GetMapping("/chrome/sendSmsCode")
+    @FlowLimit(interval = 5L)
     @ApiOperation(value = "[模拟chrome]发送验证码")
     public R<?> mockChromeSendSmsCode(@RequestParam String phone, @RequestParam(required = false) String sid) throws Exception {
         Assert.isTrue(PhoneUtil.isPhone(phone), "手机号码格式不正确");
@@ -73,6 +75,7 @@ public class JdController {
     }
 
     @PostMapping("/chrome/{sid}/login")
+    @FlowLimit(interval = 5L)
     @ApiOperation(value = "[模拟chrome]登录")
     public R<?> mockChromeLogin(@PathVariable String sid, @Validated @RequestBody JdChromeLoginForm form) {
         if (Objects.nonNull(form) && form.isMock()) {
