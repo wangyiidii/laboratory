@@ -3,6 +3,7 @@ package cn.yiidii.openapi.component.selenium.jd;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
@@ -188,6 +189,11 @@ public class JdChromeSessionManager {
         String ck = StrUtil.format("pt_key={}; pt_pin={}", ptKey, ptPin);
         JdChromeSessionVO vo = BeanUtil.toBean(session, JdChromeSessionVO.class);
         vo.setCk(ck);
+        // 打印日志
+        String phone = WebDriverUtil.getValue(webDriver, By.xpath("//input[@type='tel']"));
+        if (StrUtil.isNotBlank(phone)) {
+            log.info(StrUtil.format("{}获取了cookie", DesensitizedUtil.mobilePhone(phone)));
+        }
         // 登录获取cookie完成, 从map中移除session
         this.remove(sid);
         return vo;

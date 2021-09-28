@@ -134,4 +134,35 @@ public class WebDriverUtil {
         return Stream.of(classes.split(" ")).anyMatch(e -> StrUtil.equals(e.trim(), css));
     }
 
+
+    /**
+     * 获取value
+     *
+     * @param driver driver
+     * @param by     by
+     * @return value
+     */
+    public static String getValue(WebDriver driver, By by) {
+        if (!isElementExist(driver, by)) {
+            return "";
+        }
+        WebElement ele = driver.findElement(by);
+        return ele.getAttribute("value");
+    }
+
+    /**
+     * 获取text
+     *
+     * @param driver driver
+     * @param by     by
+     * @return text
+     */
+    public static String getText(WebDriver driver, By by) {
+        if (!isElementExist(driver, by)) {
+            return "";
+        }
+        WebElement ele = driver.findElement(by);
+        return ele.getText();
+    }
+
 }
