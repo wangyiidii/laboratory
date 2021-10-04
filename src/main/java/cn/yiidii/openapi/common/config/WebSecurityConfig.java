@@ -2,7 +2,9 @@ package cn.yiidii.openapi.common.config;
 
 import cn.yiidii.pigeon.common.security.config.IgnoreUrlProperties;
 import cn.yiidii.pigeon.common.security.service.PigeonUserDetailsService;
+import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -33,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        List<String> ignoreUrls = ignoreUrlProperties.getIgnoreUrls();
+        List<String> ignoreUrls = this.handle4ReverseProxy(ignoreUrlProperties.getIgnoreUrls());
         log.info("ignoreUrls: {}", ignoreUrls);
         http
                 .formLogin()
@@ -59,5 +61,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * 处理反向代理
+     *
+     * @param urls urls
+     * @return List
+     */
+    private List<String> handle4ReverseProxy(List<String> urls) {
+        List<String> reverseProxyUrls = Lists.newArrayList(urls).stream().map(e -> "/api".concat(e)).distinct().collect(Collectors.toList());
+        reverseProxyUrls.addAll(urls);
+        return reverseProxyUrls;
+    }
 
 }
