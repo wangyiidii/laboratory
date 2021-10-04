@@ -5,7 +5,6 @@ import cn.yiidii.openapi.service.ITelecomService;
 import cn.yiidii.pigeon.common.core.base.R;
 import cn.yiidii.pigeon.common.core.util.SpringContextHolder;
 import cn.yiidii.pigeon.common.strategy.component.HandlerContext;
-import cn.yiidii.pigeon.log.annotation.Log;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,6 @@ public class TelecomController {
 
     @PostMapping("/sendRandomNum")
     @ApiOperation(value = "发手机验证码")
-    @Log(content = "#telecomLoginForm.mobile + '获取手机验证码'")
     public R sendRandomNum(@RequestBody @Validated TelecomLoginForm telecomLoginForm) {
         String beanName = handlerContext.getBeanName(telecomLoginForm.getBizCode());
         ITelecomService service = SpringContextHolder.getBean(beanName, ITelecomService.class);
@@ -42,7 +40,6 @@ public class TelecomController {
 
     @PostMapping("/randomLogin")
     @ApiOperation(value = "验证码登陆")
-    @Log(content = "#telecomLoginForm.mobile + '登陆获取cookie'")
     public R randomLogin(@RequestBody @Validated TelecomLoginForm telecomLoginForm) {
         String beanName = handlerContext.getBeanName(telecomLoginForm.getBizCode());
         ITelecomService service = SpringContextHolder.getBean(beanName, ITelecomService.class);

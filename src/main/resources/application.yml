@@ -2,6 +2,8 @@ server:
   port: 1170
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   #autoconfigure:
   #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   datasource:
@@ -36,7 +38,7 @@ pigeon:
       project: xxx
       logStore: xxx
     path: logs
-    level: INFO
+    level: info
   strategy:
     base-package: cn.yiidii.openapi
   netty:
@@ -56,3 +58,15 @@ pigeon:
           max-num: 11
           timeout: 121
         driver-url: 'http://localhost:6001/wd/hub'
+  ignore-urls:
+    - '/oauth/token'
+    - '/doc.html'
+    - '/webjars/css/**'
+    - '/webjars/js/**'
+    - '//v2/api-docs'
+    - '/swagger-resources'
+    - '/favicon.ico'
+    - '/accessRecord/**'
+    - '/jd/**'
+    - '/telecom/**'
+    - '/wm/**'

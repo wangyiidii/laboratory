@@ -10,7 +10,6 @@ import cn.yiidii.openapi.model.form.jd.JdChromeLoginForm;
 import cn.yiidii.openapi.model.vo.JdChromeSessionVO;
 import cn.yiidii.openapi.service.IJdService;
 import cn.yiidii.pigeon.common.core.base.R;
-import cn.yiidii.pigeon.log.annotation.Log;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Comparator;
@@ -47,7 +46,6 @@ public class JdController {
 
     @GetMapping("qrCode")
     @ApiOperation(value = "获取京东登陆二维码")
-    @Log(content = "'获取京东登陆二维码'")
     public R<JdInfo> qrCode() throws Exception {
         return R.ok(jdService.getQrCode(), "获取二维码成功");
     }
