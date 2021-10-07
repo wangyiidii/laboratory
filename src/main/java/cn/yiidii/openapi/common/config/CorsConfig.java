@@ -1,6 +1,6 @@
 package cn.yiidii.openapi.common.config;
 
-import cn.yiidii.openapi.controller.interceptor.DeprecatedApiInterceptor;
+import cn.yiidii.openapi.free.common.interceptor.DeprecatedApiInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,7 @@ public class CorsConfig implements WebMvcConfigurer {
     /**
      * 拦截器
      *
-     * @param registry
+     * @param registry registry
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

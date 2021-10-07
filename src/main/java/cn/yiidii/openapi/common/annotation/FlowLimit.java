@@ -1,7 +1,7 @@
 package cn.yiidii.openapi.common.annotation;
 
 
-import cn.yiidii.openapi.common.constant.enums.FlowLimitType;
+import cn.yiidii.openapi.common.enums.FlowLimitType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -42,7 +42,7 @@ public @interface FlowLimit {
     /**
      * type 为 TIMES有效
      *
-     * @return
+     * @return int
      */
     int times() default 20;
 

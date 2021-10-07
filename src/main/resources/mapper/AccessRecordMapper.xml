@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.yiidii.openapi.mapper.AccessRecordMapper">
+<mapper namespace="cn.yiidii.openapi.free.mapper.AccessRecordMapper">
 
-    <select id="statistics" resultType="cn.yiidii.openapi.model.bo.system.AccessRecordBO">
+    <select id="statistics" resultType="cn.yiidii.openapi.free.model.bo.system.AccessRecordBO">
         SELECT
-        <if test="groups.contains(&quot;platform&quot;)">
-            platform platform,
+        <if test="groups.contains('platform')"> 
+            platform as platform,
         </if>
-        <if test="groups.contains(&quot;browser&quot;)">
-            browser browser,
+        <if test="groups.contains('browser')">
+            browser as browser,
         </if>
-        <if test="groups.contains(&quot;deviceName&quot;)">
-            device_name deviceName,
+        <if test="groups.contains('deviceName')">
+            device_name as deviceName,
         </if>
         count( id ) count,
         t2.total,
@@ -20,19 +20,19 @@
         `access_record` t1
         INNER JOIN ( SELECT count( 1 ) total FROM access_record ) t2 ON 1 = 1
         <trim prefix="GROUP BY" prefixOverrides="," suffixOverrides=",">
-            <if test="groups.contains(&quot;platform&quot;)">
+            <if test="groups.contains('platform')">
                 platform,
             </if>
-            <if test="groups.contains(&quot;browser&quot;)">
+            <if test="groups.contains('browser')">
                 browser,
             </if>
-            <if test="groups.contains(&quot;deviceName&quot;)">
+            <if test="groups.contains('deviceName')">
                 device_name,
             </if>
         </trim>
         LIMIT #{topN}
     </select>
-    <select id="accessTrend" resultType="cn.yiidii.openapi.model.bo.system.AccessTrendBO">
+    <select id="accessTrend" resultType="cn.yiidii.openapi.free.model.bo.system.AccessTrendBO">
         SELECT DATE_FORMAT(create_time, '%H') hour,
                count(id) num
         FROM access_record
@@ -40,7 +40,7 @@
             hour
     </select>
 
-    <select id="getAccessOverview" resultType="cn.yiidii.openapi.model.bo.system.AccessOverviewBO">
+    <select id="getAccessOverview" resultType="cn.yiidii.openapi.free.model.bo.system.AccessOverviewBO">
         SELECT
         count(id) pv,
         count(DISTINCT ( ip )) uv,
@@ -57,6 +57,5 @@
         </trim>
 
     </select>
-
 
 </mapper>

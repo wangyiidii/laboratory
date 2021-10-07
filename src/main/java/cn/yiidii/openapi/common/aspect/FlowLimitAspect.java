@@ -3,7 +3,7 @@ package cn.yiidii.openapi.common.aspect;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.yiidii.openapi.common.annotation.FlowLimit;
-import cn.yiidii.openapi.common.constant.enums.FlowLimitType;
+import cn.yiidii.openapi.common.enums.FlowLimitType;
 import cn.yiidii.pigeon.common.core.base.aspect.BaseAspect;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import cn.yiidii.pigeon.common.core.util.WebUtils;
@@ -52,8 +52,6 @@ public class FlowLimitAspect extends BaseAspect {
             handleInterval(flowLimit);
         } else if (type == FlowLimitType.TIMES) {
             handleTimes(flowLimit);
-        } else {
-            return;
         }
     }
 
