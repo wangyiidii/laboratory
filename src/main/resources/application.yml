@@ -4,21 +4,6 @@ server:
 spring:
   main:
     allow-bean-definition-overriding: true
-  #autoconfigure:
-  #exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/laboratory?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=UTC
-    password: 114130
-    username: root
-  redis:
-    password: 123465
-    host: 127.0.0.1
-    database: 0
-    port: 6379
-
-logging:
-  config: classpath:logback-pigeon.xml
 
 pigeon:
   knife4j:
@@ -31,42 +16,21 @@ pigeon:
       url: 'https://blog.yiidii.cn'
       email: 'yd1141309981@gmail.com '
   log:
-    ali:
-      endpoint: cn-beijing.log.aliyuncs.com
-      accessKeyId: LT******Wv
-      accessKeySecret: b0******z3
-      project: xxx
-      logStore: xxx
     path: logs
     level: info
   strategy:
     base-package: cn.yiidii.openapi
-  netty:
-    wsChat:
-      server:
-        path: /ws/im
-        port: 7880
-    agent:
-      server:
-        port: 7890
-        idleTime: 10
-  jd:
-    ua: 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_2 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8H7 Safari/6533.18.5 UCBrowser/13.4.2.1122'
-    selenium:
-      chrome:
-        session:
-          max-num: 11
-          timeout: 121
-        driver-url: 'http://localhost:6001/wd/hub'
   ignore-urls:
     - '/oauth/token'
     - '/doc.html'
     - '/webjars/css/**'
     - '/webjars/js/**'
-    - '//v2/api-docs'
+    - '/v2/api-docs'
     - '/swagger-resources'
     - '/favicon.ico'
     - '/accessRecord/**'
     - '/jd/**'
     - '/telecom/**'
     - '/wm/**'
+  trace:
+    enabled: true
