@@ -63,4 +63,5 @@ pigeon:
     - '/jd/**'
     - '/telecom/**'
     - '/wm/**'
+    - '/free/**'
 debug: false

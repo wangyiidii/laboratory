@@ -36,6 +36,7 @@ pigeon:
     - '/jd/**'
     - '/telecom/**'
     - '/wm/**'
+    - '/free/**'
   trace:
     enabled: true
 
