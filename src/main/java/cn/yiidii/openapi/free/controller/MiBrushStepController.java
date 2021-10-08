@@ -7,20 +7,24 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.yiidii.openapi.free.model.form.MiBrushStepForm;
 import cn.yiidii.pigeon.common.core.base.R;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -37,15 +41,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class MiBrushStepController {
 
     @GetMapping("step")
-    public R<?> brushStep(@Validated MiBrushStepForm form) {
+    @ApiOperation("Mi运动刷步数")
+    public R<?> miBrushStep(@RequestParam @NotNull(message = "密码不能为空") @Pattern(regexp = "^(?:(?:\\+|00)86)?1\\d{10}$", message = "手机号格式不正确") String phone,
+            @RequestParam @NotNull(message = "密码不能为空") String password,
+            @RequestParam(required = false, defaultValue = "18888") @Valid Long step) {
         try {
-            this.brushStep(form.getPhone(), form.getPassword(), form.getStep());
-        } catch (Exception e) {
-            log.error(StrUtil.format("[{}]打卡失败, e: {}", form.getPhone(), e.getMessage()));
+            this.brushStep(phone, password, step);
+        } catch (BizException e) {
+            log.error(StrUtil.format("[{}]打卡失败, e: {}", phone, e.getMessage()));
+            throw new BizException(e.getMessage());
+        } catch (Exception e){
+            log.error(StrUtil.format("[{}]打卡失败, e: {}", phone, e.getMessage()));
             throw new BizException(StrUtil.format("打卡失败"));
         }
-        log.info(StrUtil.format("[{}]打卡成功, 步数: {}", form.getPhone(), form.getStep()));
-        return R.ok(StrUtil.format("打卡成功, 步数: {}", form.getStep()));
+        log.info(StrUtil.format("[{}]打卡成功, 步数: {}", phone, step));
+        return R.ok(null, StrUtil.format("打卡成功, 步数: {}", step));
     }
 
     private void brushStep(String phone, String password, long step) {
@@ -67,6 +77,9 @@ public class MiBrushStepController {
                 .execute();
         String location = response.header(Header.LOCATION);
         String access = ReUtil.get("(?<=access=).*?(?=&)", location, 0);
+        if (StrUtil.isBlank(access)) {
+            throw new BizException("获取授权码失败(可能密码错误)");
+        }
 
         // 获取loginToken和uerId
         params.clear();
