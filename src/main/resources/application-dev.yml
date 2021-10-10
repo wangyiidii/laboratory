@@ -64,4 +64,16 @@ pigeon:
     - '/telecom/**'
     - '/wm/**'
     - '/free/**'
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin
+    accessToken: 'pigeonXXLJob'
+    executor:
+      appname: laboratory
+      address:
+      ip:
+      port: 9998
+      logPath: logs/job/
+      logRetentionDays: 30
+
 debug: false
