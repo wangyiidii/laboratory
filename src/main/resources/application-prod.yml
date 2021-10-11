@@ -17,7 +17,7 @@ spring:
     port: 6379
 
 logging:
-  config: classpath:logback-spring-dev.xml
+  config: classpath:logback-lab-prod.xml
 
 pigeon:
   knife4j:
