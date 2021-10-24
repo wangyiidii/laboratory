@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.yiidii.openapi.free.component.mi.MiBrushStepComponent;
-import cn.yiidii.openapi.free.model.form.mi.MiBrushStepForm;
+import cn.yiidii.openapi.free.component.signin.MiBrushStepComponent;
+import cn.yiidii.openapi.free.model.form.signin.MiBrushStepForm;
 import cn.yiidii.pigeon.common.redis.core.RedisOps;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -48,7 +48,7 @@ public class LabJobHandler {
         int hour = DateUtil.thisHour(true);
         // 58800 / 16 = 3680
         Long interval = 3680L;
-        if (hour < 6 || hour >= 24) {
+        if (hour < 6 || hour >= 22) {
             // 6点前和22点之后不更新
             ReturnT<String> result = ReturnT.SUCCESS;
             result.setMsg("6点前和22点之后不更新");

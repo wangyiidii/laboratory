@@ -75,5 +75,13 @@ pigeon:
       port: 1151
       logPath: logs/job/
       logRetentionDays: 30
+  rocketmq:
+    name-server: 127.0.0.1:9876
+    producer:
+      group: lab-default-producer
+    consumer:
+      group: lab-default-consumer
+      topic: lab-default-topic
+
 
 debug: false

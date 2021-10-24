@@ -1,4 +1,4 @@
-package cn.yiidii.openapi.free.component.mi;
+package cn.yiidii.openapi.free.component.signin;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.yiidii.openapi.free.model.form.mi.MiBrushStepForm;
+import cn.yiidii.openapi.free.model.form.signin.MiBrushStepForm;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import cn.yiidii.pigeon.common.redis.core.RedisOps;
 import com.alibaba.fastjson.JSONObject;

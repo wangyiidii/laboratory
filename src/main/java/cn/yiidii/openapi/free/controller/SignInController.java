@@ -1,8 +1,8 @@
 package cn.yiidii.openapi.free.controller;
 
 import cn.hutool.core.util.StrUtil;
-import cn.yiidii.openapi.free.component.mi.MiBrushStepComponent;
-import cn.yiidii.openapi.free.model.form.mi.MiBrushStepForm;
+import cn.yiidii.openapi.free.component.signin.MiBrushStepComponent;
+import cn.yiidii.openapi.free.model.form.signin.MiBrushStepForm;
 import cn.yiidii.pigeon.common.core.base.R;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import io.swagger.annotations.Api;
@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * mi
+ * 签到接口
  *
  * @author YiiDii Wang
  * @create 2021-10-08 13:00
  */
-@Api(tags = "Mi")
+@Api(tags = "签到接口")
 @Slf4j
 @RestController
-@RequestMapping("/free/mi")
+@RequestMapping("/free")
 @RequiredArgsConstructor
-public class MiBrushStepController {
+public class SignInController {
 
     private final MiBrushStepComponent miBrushStepComponent;
 
-    @PostMapping("step")
+    @PostMapping("/mi/step")
     @ApiOperation("Mi运动刷步数")
     public R<?> miBrushStep(@RequestBody @Validated MiBrushStepForm form) {
         try {
