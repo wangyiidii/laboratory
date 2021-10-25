@@ -41,5 +41,12 @@ pigeon:
     enabled: true
 
 mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  # 配置枚举 支持通配符 * 或者 ; 分割
+  type-enums-package: cn.yiidii.openapi.uaa.model.enums;cn.yiidii.pigeon.common.core.base.enumeration
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   sql-log:
     enable: true
