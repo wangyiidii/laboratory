@@ -3,8 +3,8 @@ package cn.yiidii.openapi.free.service;
 import cn.yiidii.openapi.free.model.bo.system.AccessRecordBO;
 import cn.yiidii.openapi.free.model.bo.system.AccessTrendBO;
 import cn.yiidii.openapi.free.model.entity.system.AccessRecord;
-import cn.yiidii.openapi.free.model.form.AccessRecordForm;
-import cn.yiidii.openapi.free.model.vo.AccessOverviewVO;
+import cn.yiidii.openapi.free.model.form.system.AccessRecordForm;
+import cn.yiidii.openapi.free.model.vo.system.AccessOverviewVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 

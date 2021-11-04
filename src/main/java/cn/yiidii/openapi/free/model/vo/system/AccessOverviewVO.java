@@ -1,4 +1,4 @@
-package cn.yiidii.openapi.free.model.vo;
+package cn.yiidii.openapi.free.model.vo.system;
 
 import cn.yiidii.openapi.free.model.bo.system.AccessOverviewBO;
 import lombok.AllArgsConstructor;

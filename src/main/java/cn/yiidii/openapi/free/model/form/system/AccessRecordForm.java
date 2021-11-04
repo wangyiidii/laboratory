@@ -1,4 +1,4 @@
-package cn.yiidii.openapi.free.model.form;
+package cn.yiidii.openapi.free.model.form.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
