@@ -64,6 +64,7 @@ pigeon:
     - '/telecom/**'
     - '/wm/**'
     - '/test/**'
+    - '/free/**'
     - '/dict/**'
 
   job:
