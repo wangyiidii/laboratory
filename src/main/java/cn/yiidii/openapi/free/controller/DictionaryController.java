@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/free/dict")
+@RequestMapping("/dict")
 @Api(tags = "字典")
 public class DictionaryController {
 
@@ -43,7 +43,7 @@ public class DictionaryController {
         return R.ok(dictVOs);
     }
 
-    @PostMapping("/save")
+    @PostMapping("")
     @ApiOperation(value = "保存")
     private R<DictionaryVO> save(@RequestBody DictionarySaveForm form) {
         Dictionary dict = dictionaryService.save(form);

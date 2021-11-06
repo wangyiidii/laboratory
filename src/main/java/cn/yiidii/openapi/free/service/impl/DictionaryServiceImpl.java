@@ -6,6 +6,7 @@ import cn.yiidii.openapi.free.mapper.DictionaryMapper;
 import cn.yiidii.openapi.free.model.entity.system.Dictionary;
 import cn.yiidii.openapi.free.model.form.system.DictionarySaveForm;
 import cn.yiidii.openapi.free.service.IDictionaryService;
+import cn.yiidii.pigeon.common.core.base.enumeration.Status;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.jcajce.provider.symmetric.AES.Wrap;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,14 +34,14 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
         String type = form.getType();
         String code = form.getCode();
         // 先查询是否支持当前类型
-        Dictionary dict = this.getOne(Wrappers.<Dictionary>lambdaQuery().eq(Dictionary::getType, type), false);
-        if (Objects.isNull(dict)) {
+        Dictionary dictType = this.getOne(Wrappers.<Dictionary>lambdaQuery().eq(Dictionary::getType, type), false);
+        if (Objects.isNull(dictType)) {
             throw new BizException(StrUtil.format("不支持类型[{}]", type));
         }
         // 再查询code是否存在
         LambdaQueryWrapper<Dictionary> lqw = Wrappers.<Dictionary>lambdaQuery().eq(Dictionary::getType, type)
                 .eq(Dictionary::getCode, code);
-        dict = this.getOne(lqw);
+        Dictionary dict = this.getOne(lqw);
         if (Objects.nonNull(dict)) {
             throw new BizException(StrUtil.format("[{}]已存在", code));
         }
@@ -52,9 +52,10 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
         Map<String, Object> map = this.getMap(qw);
         int sortValue = Integer.parseInt(map.getOrDefault("maxSortValue", 1).toString()) + 1;
         Dictionary dictInsert = BeanUtil.toBean(form, Dictionary.class);
-        dictInsert.setLabel(dict.getLabel())
+        dictInsert.setLabel(dictType.getLabel())
                 .setCode(StrUtil.isNotBlank(code) ? code : type + "_" + sortValue)
-                .setSortValue(sortValue);
+                .setSortValue(sortValue)
+                .setStatus(Status.DISABLED);
         // 插入
         this.save(dictInsert);
         return dictInsert;
