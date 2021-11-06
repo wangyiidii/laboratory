@@ -8,7 +8,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/laboratory?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=UTC
-    password: 114130
+    password: pwd
     username: root
   redis:
     password: 123465
@@ -63,4 +63,24 @@ pigeon:
     - '/jd/**'
     - '/telecom/**'
     - '/wm/**'
-debug: false
+    - '/test/**'
+    - '/dict/**'
+
+  job:
+    admin:
+      addresses: http://127.0.0.1:1150/xxl-job-admin
+    accessToken: 'xxx'
+    executor:
+      appname: laboratory
+      address:
+      ip:
+      port: 1151
+      logPath: logs/job/
+      logRetentionDays: 30
+  rocketmq:
+    name-server: 127.0.0.1:9876
+    producer:
+      group: lab-producer
+    consumer:
+      group: lab-default-consumer
+      topic: lab-default-topic
