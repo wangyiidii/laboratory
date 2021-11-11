@@ -1,6 +1,5 @@
 package cn.yiidii.openapi.free.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.yiidii.openapi.free.model.entity.system.Dictionary;
 import cn.yiidii.openapi.free.model.form.system.DictionarySaveForm;
 import cn.yiidii.openapi.free.model.vo.system.DictionaryVO;
@@ -37,7 +36,7 @@ public class DictionaryController {
 
     @GetMapping("")
     @ApiOperation(value = "根据类型查询字典值")
-    private R<List<DictionaryVO>> list(@RequestParam @NotNull(message = "type不能为空") String type) {
+    public R<List<DictionaryVO>> list(@RequestParam @NotNull(message = "type不能为空") String type) {
         List<Dictionary> list = dictionaryService.list(Wrappers.<Dictionary>lambdaQuery().eq(Dictionary::getType, type).orderByAsc(Dictionary::getSortValue));
         List<DictionaryVO> dictVOs = dozerUtils.mapList(list, DictionaryVO.class);
         return R.ok(dictVOs);
@@ -45,7 +44,7 @@ public class DictionaryController {
 
     @PostMapping("")
     @ApiOperation(value = "保存")
-    private R<DictionaryVO> save(@RequestBody DictionarySaveForm form) {
+    public R<DictionaryVO> save(@RequestBody DictionarySaveForm form) {
         Dictionary dict = dictionaryService.save(form);
         return R.ok(dozerUtils.map(dict, DictionaryVO.class));
     }
