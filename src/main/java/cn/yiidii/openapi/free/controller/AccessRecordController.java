@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 访问记录
+ *
  * @author YiiDii Wang
  * @create 2021-07-31 23:41
  */
