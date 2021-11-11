@@ -15,6 +15,11 @@ spring:
     host: 127.0.0.1
     database: 0
     port: 6379
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: lab
 
 logging:
   config: classpath:logback-lab-prod.xml
@@ -32,6 +37,8 @@ pigeon:
   log:
     path: logs-dev
     level: info
+    type: 'MONGO'
+    enabled: true
   strategy:
     base-package: cn.yiidii.openapi
   netty:
