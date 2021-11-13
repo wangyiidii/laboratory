@@ -2,12 +2,15 @@ package cn.yiidii.openapi.free.component.signin;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.yiidii.openapi.common.util.AdminNotifyUtil;
 import cn.yiidii.openapi.free.model.form.signin.MiBrushStepForm;
+import cn.yiidii.openapi.free.model.vo.mail.AdminNotifyVO;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import cn.yiidii.pigeon.common.redis.core.RedisOps;
 import com.alibaba.fastjson.JSONObject;
@@ -34,6 +37,7 @@ public class MiBrushStepComponent {
     public static final String KEY_MI_BRUSH_STEP_INFO = "miBrushStepInfo";
 
     private final RedisOps redisOps;
+    private final AdminNotifyUtil adminNotifyUtil;
 
     public void brushStep(MiBrushStepForm form) {
         String phone = form.getPhone();
@@ -119,6 +123,10 @@ public class MiBrushStepComponent {
             // 非自动执行, 从redis移除
             redisOps.hdel(KEY_MI_BRUSH_STEP_INFO, phone);
         }
+
+        // 通知
+        String content = StrUtil.format("{}刷新了{}步", DesensitizedUtil.mobilePhone(phone), step);
+        adminNotifyUtil.doNotify(content, new AdminNotifyVO().setContent(content));
     }
 
 }

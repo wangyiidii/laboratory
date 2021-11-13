@@ -2,9 +2,11 @@ package cn.yiidii.openapi.free.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.yiidii.openapi.common.util.AdminNotifyUtil;
 import cn.yiidii.openapi.free.mapper.DictionaryMapper;
 import cn.yiidii.openapi.free.model.entity.system.Dictionary;
 import cn.yiidii.openapi.free.model.form.system.DictionarySaveForm;
+import cn.yiidii.openapi.free.model.vo.mail.AdminNotifyVO;
 import cn.yiidii.openapi.free.service.IDictionaryService;
 import cn.yiidii.pigeon.common.core.base.enumeration.Status;
 import cn.yiidii.pigeon.common.core.exception.BizException;
@@ -28,6 +30,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Dictionary> implements IDictionaryService {
+
+    private final AdminNotifyUtil adminNotifyUtil;
 
     @Override
     public Dictionary save(DictionarySaveForm form) {
@@ -58,6 +62,10 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
                 .setStatus(Status.DISABLED);
         // 插入
         this.save(dictInsert);
+
+        // 通知
+        adminNotifyUtil.doNotify("新增字典通知",
+                new AdminNotifyVO().setContent(StrUtil.format("有人在Lab新增了字典（{}），快来看看吧！", form.getType())));
         return dictInsert;
     }
 }

@@ -98,6 +98,21 @@
             <artifactId>pigeon-starter-redis</artifactId>
             <version>${pigeon.common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.yiidii.pigeon</groupId>
+            <artifactId>pigeon-starter-rocketmq</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.yiidii.pigeon</groupId>
+            <artifactId>pigeon-starter-mongodb</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.yiidii.pigeon</groupId>
+            <artifactId>pigeon-starter-mail</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.zxing</groupId>
@@ -159,16 +174,6 @@
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.yiidii.pigeon</groupId>
-            <artifactId>pigeon-starter-rocketmq</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.yiidii.pigeon</groupId>
-            <artifactId>pigeon-starter-mongodb</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

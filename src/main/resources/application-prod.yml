@@ -20,6 +20,24 @@ spring:
       host: 127.0.0.1
       port: 27017
       database: lab
+  mail:
+    host: smtp.qq.com
+    username: xxx@qq.com
+    password: xxx
+    default-encoding: UTF-8
+    nickname: xxx@qq.com
+    #其他此参数
+    properties:
+      mail:
+        smtp:
+          #如果用ssl方式，需要配置以下属性
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+          starttls:
+            enable: true
+            required: true
 
 logging:
   config: classpath:logback-lab-prod.xml
@@ -92,3 +110,7 @@ pigeon:
     consumer:
       group: lab-default-consumer
       topic: lab-default-topic
+  lab:
+    adminNotify:
+      mail: xxx@qq.com
+      enabled: true
