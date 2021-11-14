@@ -1,4 +1,4 @@
-package cn.yiidii.openapi.job.config;
+package cn.yiidii.openapi.common.config;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;

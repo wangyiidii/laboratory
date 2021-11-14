@@ -52,7 +52,7 @@ public class SignInController {
     @Log(content = "#form.phone + '刷新了' + #form.step + '步'", type = "MI_BRUSH_LATEST_INFO")
     public R<?> miBrushStep(@RequestBody @Validated MiBrushStepForm form) {
         try {
-            miBrushStepComponent.brushStep(form);
+            miBrushStepComponent.brushStep(form, true);
         } catch (BizException e) {
             log.error(StrUtil.format("[{}]打卡失败, e: {}", form.getPhone(), e.getMessage()));
             throw new BizException(e.getMessage());
@@ -69,11 +69,14 @@ public class SignInController {
     public R<?> miBrushStepTopN(@RequestParam(defaultValue = "10") Integer topN) {
         List<OptLogDTO> optLogDTOS = optLogDAO.find(new Query().addCriteria(Criteria.where("type").is("MI_BRUSH_LATEST_INFO")).with(Sort.by(Order.desc("startTime"))).limit(topN));
         List<MiBrushStepTopNVO> vos = optLogDTOS.stream().map(e -> {
-            JSONObject paramJo = JSONArray.parseArray(e.getParams()).getJSONObject(0);
             MiBrushStepTopNVO vo = BeanUtil.toBean(e, MiBrushStepTopNVO.class);
-            vo.setContent(StrUtil.format("{}刷新了{}步",
-                    DesensitizedUtil.mobilePhone(paramJo.getString("phone")),
-                    paramJo.getString("step")));
+            try {
+                JSONObject paramJo = JSONArray.parseArray(e.getParams()).getJSONObject(0);
+                vo.setContent(StrUtil.format("{}刷新了{}步",
+                        DesensitizedUtil.mobilePhone(paramJo.getString("phone")),
+                        paramJo.getString("step")));
+            } catch (Exception ex) {
+            }
             return vo;
         }).distinct().collect(Collectors.toList());
         return R.ok(vos);

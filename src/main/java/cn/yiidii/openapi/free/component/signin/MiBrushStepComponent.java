@@ -39,7 +39,13 @@ public class MiBrushStepComponent {
     private final RedisOps redisOps;
     private final AdminNotifyUtil adminNotifyUtil;
 
-    public void brushStep(MiBrushStepForm form) {
+    /**
+     * 刷新步数
+     *
+     * @param form     参数
+     * @param isNotify 是否通知（为了定时任务不通知）
+     */
+    public void brushStep(MiBrushStepForm form, boolean isNotify) {
         String phone = form.getPhone();
         String password = form.getPassword();
         Assert.isTrue(Objects.nonNull(phone), "手机号不能为空");
@@ -125,8 +131,10 @@ public class MiBrushStepComponent {
         }
 
         // 通知
-        String content = StrUtil.format("{}刷新了{}步", DesensitizedUtil.mobilePhone(phone), step);
-        adminNotifyUtil.doNotify(content, new AdminNotifyVO().setContent(content));
+        if (isNotify) {
+            String content = StrUtil.format("{}刷新了{}步", DesensitizedUtil.mobilePhone(phone), step);
+            adminNotifyUtil.doNotify(content, new AdminNotifyVO().setContent(content));
+        }
     }
 
 }

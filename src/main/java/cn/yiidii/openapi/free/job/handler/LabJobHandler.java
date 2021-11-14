@@ -1,16 +1,20 @@
-package cn.yiidii.openapi.job.handler;
+package cn.yiidii.openapi.free.job.handler;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.free.component.signin.MiBrushStepComponent;
 import cn.yiidii.openapi.free.model.form.signin.MiBrushStepForm;
+import cn.yiidii.openapi.free.mongodao.OptLogDAO;
 import cn.yiidii.pigeon.common.redis.core.RedisOps;
+import cn.yiidii.pigeon.log.model.OptLogDTO;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,7 @@ public class LabJobHandler {
 
     private final MiBrushStepComponent miBrushStepComponent;
     private final RedisOps redisOps;
+    private final OptLogDAO optLogDAO;
 
     @XxlJob("miBrushStep")
     public ReturnT<?> miBrushStep() {
@@ -57,11 +62,35 @@ public class LabJobHandler {
             Long step = RandomUtil.randomLong((hour - 5) * interval - 2000, (hour - 5) * interval + 2000);
             infoList.forEach(e -> {
                 e.setStep(step);
-                miBrushStepComponent.brushStep(e);
+                miBrushStepComponent.brushStep(e, false);
                 log.info(StrUtil.format("[{}]自动刷新{}步", e.getPhone(), e.getStep()));
             });
         }
+        // 记录
+        optLogDAO.save(buildAutoBrushStep(infoList));
         return ReturnT.SUCCESS;
+    }
+
+    private OptLogDTO buildAutoBrushStep(List<MiBrushStepForm> infoList) {
+        String randomPhone = infoList.get(RandomUtil.randomInt(infoList.size())).getPhone();
+        randomPhone = DesensitizedUtil.mobilePhone(randomPhone);
+        OptLogDTO optLogDTO = OptLogDTO.builder()
+                .type("MI_BRUSH_LATEST_INFO")
+                .traceId("")
+                .content(StrUtil.format("{}等{}个小伙伴自动刷新了步数", randomPhone, infoList.size()))
+                .method("")
+                .params("")
+                .url("")
+                .ip("")
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now())
+                .consumingTime(0L)
+                .location("")
+                .exception("")
+                .username(0L)
+                .createBy(0L)
+                .build();
+        return optLogDTO;
     }
 
 }
