@@ -47,6 +47,15 @@ public @interface FlowLimit {
     int times() default 20;
 
     /**
+     * 时间周期
+     * <p/>
+     * 表示允许调用的时间范围
+     *
+     * @return period
+     */
+    String period() default "";
+
+    /**
      * 匹配带限流的响应信息
      *
      * @return message

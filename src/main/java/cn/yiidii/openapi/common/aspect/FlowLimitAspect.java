@@ -2,6 +2,7 @@ package cn.yiidii.openapi.common.aspect;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.common.annotation.FlowLimit;
 import cn.yiidii.openapi.common.enums.FlowLimitType;
 import cn.yiidii.pigeon.common.core.base.aspect.BaseAspect;
@@ -52,6 +53,8 @@ public class FlowLimitAspect extends BaseAspect {
             handleInterval(flowLimit);
         } else if (type == FlowLimitType.TIMES) {
             handleTimes(flowLimit);
+        } else if (type == FlowLimitType.PERIOD) {
+            handlePeriod(flowLimit);
         }
     }
 
@@ -94,5 +97,20 @@ public class FlowLimitAspect extends BaseAspect {
         final Date now = new Date();
         long expire = DateUtil.between(now, DateUtil.endOfDay(now), DateUnit.SECOND);
         redisOps.hset(ip, url, ++timeCache, expire);
+    }
+
+    /**
+     * 限制时间周期模式
+     *
+     * @param flowLimit flowLimit
+     */
+    private void handlePeriod(FlowLimit flowLimit) {
+        String period = flowLimit.period();
+        String[] split = period.split("-");
+        Date begin = DateUtil.parseTime(split[0]).toJdkDate();
+        Date end = DateUtil.parse(split[1]).toJdkDate();
+        if (!DateUtil.isIn(new Date(), begin, end)) {
+            throw new BizException(StrUtil.format("仅允许{} ~ {}调用", split[0], split[1]));
+        }
     }
 }

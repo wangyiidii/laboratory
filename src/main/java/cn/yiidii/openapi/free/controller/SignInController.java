@@ -3,6 +3,8 @@ package cn.yiidii.openapi.free.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.yiidii.openapi.common.annotation.FlowLimit;
+import cn.yiidii.openapi.common.enums.FlowLimitType;
 import cn.yiidii.openapi.free.component.signin.MiBrushStepComponent;
 import cn.yiidii.openapi.free.model.form.signin.MiBrushStepForm;
 import cn.yiidii.openapi.free.model.vo.signin.MiBrushStepTopNVO;
@@ -50,6 +52,7 @@ public class SignInController {
     @PostMapping("/mi/step")
     @ApiOperation("Mi运动刷步数")
     @Log(content = "#form.phone + '刷新了' + #form.step + '步'", type = "MI_BRUSH_LATEST_INFO")
+    @FlowLimit(type = FlowLimitType.PERIOD, period = "06:00:00-22:00:00")
     public R<?> miBrushStep(@RequestBody @Validated MiBrushStepForm form) {
         try {
             miBrushStepComponent.brushStep(form, true);

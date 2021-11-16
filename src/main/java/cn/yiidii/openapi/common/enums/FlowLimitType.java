@@ -13,8 +13,20 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FlowLimitType {
 
+    /**
+     * 时间间隔
+     */
     INTERVAL("时间间隔"),
-    TIMES("次数");
+
+    /**
+     * 次数
+     */
+    TIMES("次数"),
+
+    /**
+     * 时间周期
+     */
+    PERIOD("时间周期");
 
     private String label;
 
