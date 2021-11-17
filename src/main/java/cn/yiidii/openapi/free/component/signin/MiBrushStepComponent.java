@@ -1,6 +1,7 @@
 package cn.yiidii.openapi.free.component.signin;
 
 import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.ReUtil;
@@ -35,6 +36,7 @@ import org.springframework.util.Assert;
 public class MiBrushStepComponent {
 
     public static final String KEY_MI_BRUSH_STEP_INFO = "miBrushStepInfo";
+    public static final String KEY_MI_BRUSH_STEP_CHECK = "miBrushStep:check";
 
     private final RedisOps redisOps;
     private final AdminNotifyUtil adminNotifyUtil;
@@ -54,6 +56,8 @@ public class MiBrushStepComponent {
         if (step < 0) {
             step = 18888L;
         }
+
+        this.check(form);
 
         // 获取access
         Map<String, Object> params = Maps.newHashMap();
@@ -135,6 +139,26 @@ public class MiBrushStepComponent {
             String content = StrUtil.format("{}刷新了{}步", DesensitizedUtil.mobilePhone(phone), step);
             adminNotifyUtil.doNotify(content, new AdminNotifyVO().setContent(content));
         }
+    }
+
+    /**
+     * 检查步数，当天只能增加
+     *
+     * @param form form
+     */
+    private void check(MiBrushStepForm form) {
+        long step = 0;
+        try {
+            step = Long.parseLong(redisOps.hget(KEY_MI_BRUSH_STEP_CHECK, form.getPhone()).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (form.getStep() <= step) {
+            throw new BizException(StrUtil.format("今天已经刷新了{}步啦，加大步数试一试~", step));
+        }
+        // 当天有效
+        long expire = DateUtil.between(new Date(), DateUtil.endOfDay(new Date()), DateUnit.SECOND);
+        redisOps.hset(KEY_MI_BRUSH_STEP_CHECK, form.getPhone(), form.getStep(), expire);
     }
 
 }
