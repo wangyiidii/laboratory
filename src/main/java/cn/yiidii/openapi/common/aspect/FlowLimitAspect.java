@@ -2,6 +2,7 @@ package cn.yiidii.openapi.common.aspect;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.common.annotation.FlowLimit;
 import cn.yiidii.openapi.common.enums.FlowLimitType;
@@ -49,13 +50,15 @@ public class FlowLimitAspect extends BaseAspect {
         if (Objects.isNull(flowLimit)) {
             return;
         }
-        final FlowLimitType type = flowLimit.type();
-        if (type == FlowLimitType.INTERVAL) {
-            handleInterval(flowLimit);
-        } else if (type == FlowLimitType.TIMES) {
-            handleTimes(flowLimit);
-        } else if (type == FlowLimitType.PERIOD) {
-            handlePeriod(flowLimit);
+        final FlowLimitType[] typeArr = flowLimit.type();
+        for (FlowLimitType type : typeArr) {
+            if (type == FlowLimitType.INTERVAL) {
+                handleInterval(flowLimit);
+            } else if (type == FlowLimitType.TIMES) {
+                handleTimes(flowLimit);
+            } else if (type == FlowLimitType.PERIOD) {
+                handlePeriod(flowLimit);
+            }
         }
     }
 
@@ -75,7 +78,7 @@ public class FlowLimitAspect extends BaseAspect {
         final Long pre = redisOps.getExpire(key);
         if (pre > 0) {
             String message = flowLimit.message();
-            message = StrUtil.isBlank(message) ? "请求频率过快" : message;
+            message = StrUtil.isBlank(message) ? StrUtil.format("请求频率限制{}秒", NumberUtil.round(TimeUnit.MILLISECONDS.convert(interval, unit) / 1000, 2)) : message;
             throw new BizException(message);
         }
         redisOps.set(key, "", interval, unit);

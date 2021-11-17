@@ -52,7 +52,8 @@ public class SignInController {
     @PostMapping("/mi/step")
     @ApiOperation("Mi运动刷步数")
     @Log(content = "#form.phone + '刷新了' + #form.step + '步'", type = "MI_BRUSH_LATEST_INFO")
-    @FlowLimit(type = FlowLimitType.PERIOD, periods = "06:00:00-22:00:00")
+    @FlowLimit(type = {FlowLimitType.INTERVAL, FlowLimitType.PERIOD}, interval = 10,
+            periods = "06:00:00-22:00:00")
     public R<?> miBrushStep(@RequestBody @Validated MiBrushStepForm form) {
         try {
             miBrushStepComponent.brushStep(form, true);

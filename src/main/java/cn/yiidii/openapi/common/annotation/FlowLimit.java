@@ -23,7 +23,7 @@ public @interface FlowLimit {
      *
      * @return FlowLimitType
      */
-    FlowLimitType type() default FlowLimitType.INTERVAL;
+    FlowLimitType[] type() default FlowLimitType.INTERVAL;
 
     /**
      * 接口调用最小间隔
