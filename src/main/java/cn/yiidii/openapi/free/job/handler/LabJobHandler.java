@@ -17,6 +17,7 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -60,24 +61,32 @@ public class LabJobHandler {
             return result;
         } else {
             Long step = RandomUtil.randomLong((hour - 5) * interval - 2000, (hour - 5) * interval + 2000);
+            AtomicInteger successCount = new AtomicInteger();
             infoList.forEach(e -> {
                 e.setStep(step);
-                miBrushStepComponent.brushStep(e, false);
+                try {
+                    miBrushStepComponent.brushStep(e, false);
+                } catch (Exception exception) {
+                    log.error(StrUtil.format("{}自动刷新步数异常, e:{}", e.getPhone(), exception.getMessage()));
+                }
+                successCount.getAndIncrement();
                 log.info(StrUtil.format("[{}]自动刷新{}步", e.getPhone(), e.getStep()));
             });
+
+            // 记录
+            String randomPhone = infoList.get(RandomUtil.randomInt(infoList.size())).getPhone();
+            randomPhone = DesensitizedUtil.mobilePhone(randomPhone);
+            String content = StrUtil.format("{}等{}个小伙伴自动刷新了步数", randomPhone, infoList.size());
+            optLogDAO.save(buildAutoBrushStep(content));
+            return ReturnT.SUCCESS;
         }
-        // 记录
-        optLogDAO.save(buildAutoBrushStep(infoList));
-        return ReturnT.SUCCESS;
     }
 
-    private OptLogDTO buildAutoBrushStep(List<MiBrushStepForm> infoList) {
-        String randomPhone = infoList.get(RandomUtil.randomInt(infoList.size())).getPhone();
-        randomPhone = DesensitizedUtil.mobilePhone(randomPhone);
+    private OptLogDTO buildAutoBrushStep(String content) {
         OptLogDTO optLogDTO = OptLogDTO.builder()
                 .type("MI_BRUSH_LATEST_INFO")
                 .traceId("")
-                .content(StrUtil.format("{}等{}个小伙伴自动刷新了步数", randomPhone, infoList.size()))
+                .content(content)
                 .method("")
                 .params("")
                 .url("")
