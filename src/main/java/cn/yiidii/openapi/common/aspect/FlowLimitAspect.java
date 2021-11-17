@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.common.annotation.FlowLimit;
 import cn.yiidii.openapi.common.enums.FlowLimitType;
 import cn.yiidii.pigeon.common.core.base.aspect.BaseAspect;
+import cn.yiidii.pigeon.common.core.constant.StringPool;
 import cn.yiidii.pigeon.common.core.exception.BizException;
 import cn.yiidii.pigeon.common.core.util.WebUtils;
 import cn.yiidii.pigeon.common.redis.core.RedisOps;
@@ -73,7 +74,9 @@ public class FlowLimitAspect extends BaseAspect {
         String key = StringUtils.join(new String[]{ip, url}, ":");
         final Long pre = redisOps.getExpire(key);
         if (pre > 0) {
-            throw new BizException(flowLimit.message());
+            String message = flowLimit.message();
+            message = StrUtil.isBlank(message) ? "请求频率过快" : message;
+            throw new BizException(message);
         }
         redisOps.set(key, "", interval, unit);
     }
@@ -92,7 +95,9 @@ public class FlowLimitAspect extends BaseAspect {
         Object timesCacheObj = redisOps.hget(ip, url);
         int timeCache = Objects.isNull(timesCacheObj) ? 0 : Integer.parseInt(timesCacheObj.toString());
         if (timeCache >= timeThreshold) {
-            throw new BizException("限制调用次数");
+            String message = flowLimit.message();
+            message = StrUtil.isBlank(message) ? "限制调用次数" : message;
+            throw new BizException(message);
         }
         final Date now = new Date();
         long expire = DateUtil.between(now, DateUtil.endOfDay(now), DateUnit.SECOND);
@@ -105,12 +110,18 @@ public class FlowLimitAspect extends BaseAspect {
      * @param flowLimit flowLimit
      */
     private void handlePeriod(FlowLimit flowLimit) {
-        String period = flowLimit.period();
-        String[] split = period.split("-");
-        Date begin = DateUtil.parseTime(split[0]).toJdkDate();
-        Date end = DateUtil.parse(split[1]).toJdkDate();
-        if (!DateUtil.isIn(new Date(), begin, end)) {
-            throw new BizException(StrUtil.format("仅允许{} ~ {}调用", split[0], split[1]));
+        String periods = flowLimit.periods();
+        String[] periodArr = periods.split(StringPool.SEMICOLON);
+        for (String period : periodArr) {
+            period = period.trim();
+            String[] limit = period.split(StringPool.DASH);
+            Date begin = DateUtil.parseTimeToday(limit[0]).toJdkDate();
+            Date end = DateUtil.parseTimeToday(limit[1]).toJdkDate();
+            if (!DateUtil.isIn(new Date(), begin, end)) {
+                String message = flowLimit.message();
+                message = StrUtil.isBlank(message) ? StrUtil.format("仅允许{} ~ {}调用", limit[0], limit[1]) : message;
+                throw new BizException(message);
+            }
         }
     }
 }

@@ -53,12 +53,12 @@ public @interface FlowLimit {
      *
      * @return period
      */
-    String period() default "";
+    String periods() default "";
 
     /**
      * 匹配带限流的响应信息
      *
      * @return message
      */
-    String message() default "请求频率过快";
+    String message() default "";
 }
