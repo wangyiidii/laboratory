@@ -8,6 +8,10 @@ spring:
     name: '@project.artifactId@'
   profiles:
     active: '@profile.active@'
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
 
 pigeon:
   knife4j:

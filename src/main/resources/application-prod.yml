@@ -91,6 +91,7 @@ pigeon:
     - '/test/**'
     - '/free/**'
     - '/dict/**'
+    - '/attachment/**'
 
   job:
     admin:
@@ -114,3 +115,12 @@ pigeon:
     adminNotify:
       mail: xxx@qq.com
       enabled: true
+  file:
+    type: s3
+    endpoint: oss-cn-beijing.aliyuncs.com
+    customDomain: https://xxx.oss-cn-beijing.aliyuncs.com
+    bucketName: xxx
+    region: cn-beijing
+    accessKey: xxx
+    secret-key: xxx
+    path-style-access: false
