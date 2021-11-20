@@ -2,19 +2,24 @@ package cn.yiidii.openapi.common.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.free.model.ex.DocumentException;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
 import com.aspose.words.License;
 import com.aspose.words.SaveFormat;
+import com.google.common.collect.Sets;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
+import javax.activation.UnsupportedDataTypeException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +35,15 @@ import lombok.extern.slf4j.Slf4j;
 public class Office2Pdf {
 
     private static final String TEMP_DIR = "./temp";
+    private static final Set<String> DOC_SUFFIX;
+    private static final Set<String> EXCEL_SUFFIX;
+    private static final Set<String> PPT_SUFFIX;
+
+    static {
+        DOC_SUFFIX = Sets.newHashSet("doc", "docx", "docm", "dotx", "dotm");
+        EXCEL_SUFFIX = Sets.newHashSet("xls", "xlsx", "xlsm", "xltx", "xltm", "xlsb", "xlam");
+        PPT_SUFFIX = Sets.newHashSet("ppt", "pptx", "pptm", "ppsx", "ppsm", "potx", "potm", "ppam");
+    }
 
     /**
      * doc转Pdf
@@ -147,7 +161,30 @@ public class Office2Pdf {
         }
     }
 
-    public void checkLic() {
+    /**
+     * 转换pdf通用方法
+     *
+     * @param file 待转换的文件
+     * @return pdf文件
+     * @throws UnsupportedDataTypeException 异常
+     */
+    public static File convert(File file) throws UnsupportedDataTypeException {
+        String suffix = FileUtil.getSuffix(file);
+        if (containsIgnoreCase(DOC_SUFFIX, suffix)) {
+            return doc2Pdf(file);
+        } else if (containsIgnoreCase(EXCEL_SUFFIX, suffix)) {
+            return excel2Pdf(file);
+        } else if (containsIgnoreCase(PPT_SUFFIX, suffix)) {
+            return ppt2Pdf(file);
+        }
+        throw new UnsupportedDataTypeException(StrUtil.format("file with suffix '{}' is not support", suffix));
+    }
+
+    private static boolean containsIgnoreCase(Collection<? extends String> collection, String s) {
+        return collection.stream().filter(e -> StrUtil.containsIgnoreCase(e, s)).findFirst().isPresent();
+    }
+
+    private void checkLic() {
         try {
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("aspose/license.xml");
             License license = new License();
@@ -158,7 +195,7 @@ public class Office2Pdf {
         }
     }
 
-    public void checkCellsLic() {
+    private void checkCellsLic() {
         try {
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("aspose/license.xml");
             com.aspose.cells.License license = new com.aspose.cells.License();
@@ -169,7 +206,7 @@ public class Office2Pdf {
         }
     }
 
-    public void checkSlideLic() {
+    private void checkSlideLic() {
         try {
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("aspose/license.xml");
             com.aspose.slides.License license = new com.aspose.slides.License();

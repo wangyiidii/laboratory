@@ -1,6 +1,7 @@
 package cn.yiidii.openapi.oss.strategy;
 
 import cn.yiidii.openapi.oss.model.entity.Attachment;
+import java.io.File;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -18,6 +19,14 @@ public interface FileStrategy {
      * @return 文件对象
      */
     Attachment upload(MultipartFile file);
+
+    /**
+     * 文件上传
+     *
+     * @param file 文件
+     * @return 文件对象
+     */
+    Attachment upload(File file);
 
     /**
      * 文件删除

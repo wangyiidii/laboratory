@@ -1,5 +1,6 @@
 package cn.yiidii.openapi.oss.strategy.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
 import cn.yiidii.openapi.oss.properties.OssProperties;
@@ -15,6 +16,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.IOUtils;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +47,29 @@ public class S3FileStrategyImpl extends AbstractFileStrategy {
         objectMetadata.setContentType(multipartFile.getContentType());
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         client.putObject(bucketName, file.getUrl(), byteArrayInputStream, objectMetadata);
+        client.shutdown();
+    }
+
+    /**
+     * 具体类型执行上传操作
+     *
+     * @param attachment 附件
+     * @param file       附件
+     * @throws Exception 异常
+     */
+    @Override
+    protected void practicalUploadFile(Attachment attachment, File file) throws Exception {
+        AmazonS3 client = getClient();
+        String bucketName = fileProperties.getBucketName();
+        if (!client.doesBucketExistV2(bucketName)) {
+            client.createBucket(bucketName);
+        }
+
+        byte[] bytes = IOUtils.toByteArray(FileUtil.getInputStream(file));
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.length());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        client.putObject(bucketName, attachment.getUrl(), byteArrayInputStream, objectMetadata);
         client.shutdown();
     }
 

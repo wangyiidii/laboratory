@@ -8,6 +8,7 @@ import cn.yiidii.openapi.oss.model.entity.Attachment;
 import cn.yiidii.openapi.oss.properties.OssProperties;
 import cn.yiidii.openapi.oss.strategy.FileStrategy;
 import cn.yiidii.pigeon.common.core.exception.BizException;
+import java.io.File;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,35 @@ public abstract class AbstractFileStrategy implements FileStrategy {
     }
 
     /**
+     * 上传文件
+     *
+     * @param file 文件
+     * @return 附件
+     */
+    @Override
+    public Attachment upload(File file) {
+        try {
+            if (!StrUtil.contains(file.getName(), FILE_SPLIT)) {
+                throw new BizException("缺少后缀名");
+            }
+            // url: /date/id-name.suffix
+            String url = LocalDateTimeUtil.formatNormal(LocalDate.now()).concat("/").concat(IdUtil.simpleUUID()).concat("-").concat(file.getName());
+            Attachment attachment = Attachment.builder()
+                    .domain(fileProperties.getCustomDomain())
+                    .url(url)
+                    .filename(file.getName())
+                    .suffix(FileUtil.getSuffix(file.getName()))
+                    .size(file.length())
+                    .build();
+            practicalUploadFile(attachment, file);
+            return attachment;
+        } catch (Exception e) {
+            log.error("ex=", e);
+            throw new BizException("文件上传失败");
+        }
+    }
+
+    /**
      * 具体类型执行上传操作
      *
      * @param file          附件
@@ -65,6 +95,15 @@ public abstract class AbstractFileStrategy implements FileStrategy {
      * @throws Exception 异常
      */
     protected abstract void practicalUploadFile(Attachment file, MultipartFile multipartFile) throws Exception;
+
+    /**
+     * 具体类型执行上传操作
+     *
+     * @param file 附件
+     * @param file 文件
+     * @throws Exception 异常
+     */
+    protected abstract void practicalUploadFile(Attachment attachment, File file) throws Exception;
 
 
     /**

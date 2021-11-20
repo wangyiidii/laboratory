@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.io.File;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,13 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
     @Transactional(rollbackFor = Exception.class)
     public Attachment upload(MultipartFile multipartFile) {
         Attachment attachment = fileStrategy.upload(multipartFile);
+        attachmentMapper.insert(attachment);
+        return attachment;
+    }
+
+    @Override
+    public Attachment upload(File file) {
+        Attachment attachment = fileStrategy.upload(file);
         attachmentMapper.insert(attachment);
         return attachment;
     }
