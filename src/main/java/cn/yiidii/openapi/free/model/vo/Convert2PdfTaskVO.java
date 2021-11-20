@@ -1,7 +1,8 @@
 package cn.yiidii.openapi.free.model.vo;
 
-import cn.yiidii.openapi.oss.model.bo.Convert2PdfTaskState;
+import cn.yiidii.openapi.free.model.bo.office.Convert2PdfTaskState;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -25,24 +26,27 @@ public class Convert2PdfTaskVO {
     private String taskId;
 
     /**
-     * 文件名称
-     */
-    private String fileName;
-
-    /**
      * 回调地址
      */
     private String callbackUrl;
-    /**
-     * 附件
-     */
-    private Attachment attachment;
-    /**
-     * 备注
-     */
-    private String remark;
+
     /**
      * 状态
      */
     private Convert2PdfTaskState state;
+
+    /**
+     * 文件
+     */
+    private List<FileInfoVO> fileInfos;
+
+    @Data
+    @Slf4j
+    @Accessors(chain = true)
+    @EqualsAndHashCode
+    protected static class FileInfoVO {
+        private String fileName;
+        private Attachment attachment;
+        private String remark;
+    }
 }

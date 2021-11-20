@@ -1,4 +1,4 @@
-package cn.yiidii.openapi.oss.model.bo;
+package cn.yiidii.openapi.free.model.bo.office;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,9 +25,9 @@ public enum Convert2PdfTaskState {
      */
     SUCCESS("转换成功"),
     /**
-     * 已回调
+     * 转换成功
      */
-    CALLBACKED("已回调"),
+    PART_SUCCESS("部分转换成功"),
     /**
      * 任务失败
      */
@@ -37,15 +37,5 @@ public enum Convert2PdfTaskState {
      * 状态描述
      */
     String desc;
-
-    /**
-     * 是否结束
-     *
-     * @param state 状态
-     * @return true 结束
-     */
-    public static boolean isFinish(Convert2PdfTaskState state) {
-        return state.equals(SUCCESS) || state.equals(CALLBACKED) || state.equals(FAIL);
-    }
 
 }

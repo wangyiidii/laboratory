@@ -1,17 +1,23 @@
 package cn.yiidii.openapi.free.component;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.yiidii.openapi.common.util.Office2Pdf;
+import cn.yiidii.openapi.free.model.bo.office.Convert2PdfTask;
 import cn.yiidii.openapi.free.model.ex.DocumentException;
-import cn.yiidii.openapi.oss.model.bo.Convert2PdfTask;
+import cn.yiidii.openapi.free.model.vo.Convert2PdfTaskVO;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
 import cn.yiidii.openapi.oss.service.IAttachmentService;
 import cn.yiidii.pigeon.common.core.constant.StringPool;
 import cn.yiidii.pigeon.common.core.exception.BizException;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -30,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DocumentComponent {
 
     private static final String TEMP_DIR = "./temp";
-    public static final Map<String, Convert2PdfTask> CONVERT_TASK_MAP = Maps.newConcurrentMap();
+    private static final Map<String, Convert2PdfTask> CONVERT_TASK_MAP = Maps.newConcurrentMap();
 
     private final IAttachmentService attachmentService;
     private final ThreadPoolTaskExecutor executor;
@@ -67,29 +73,39 @@ public class DocumentComponent {
     /**
      * 带回调的转换pdf
      *
-     * @param multipartFile 带转换的文件
-     * @param callbackUrl   回调地址
+     * @param multipartFileList 带转换的文件
+     * @param callbackUrl       回调地址
      * @return 附件
      */
-    public Convert2PdfTask toPdf(MultipartFile multipartFile, String callbackUrl) {
-        Assert.notNull(multipartFile, "文件不能为空");
+    public Convert2PdfTask toPdf(List<MultipartFile> multipartFileList, String callbackUrl) {
+        Assert.notNull(multipartFileList, "文件不能为空");
 
         // 临时文件
-        File temp = getTempFile(multipartFile);
-        try {
-            FileUtil.writeBytes(multipartFile.getBytes(), temp);
-        } catch (Exception e) {
-            throw new DocumentException("创建临时文件失败");
-        }
+        List<File> tempFileList = multipartFileList.stream().map(mf -> {
+            File temp = getTempFile(mf);
+            try {
+                FileUtil.writeBytes(mf.getBytes(), temp);
+            } catch (IOException e) {
+                temp.delete();
+            }
+            return temp;
+        }).collect(Collectors.toList());
 
         // 异步任务
-        Convert2PdfTask convert2PdfTask = new Convert2PdfTask(temp, callbackUrl)
+        Convert2PdfTask convert2PdfTask = new Convert2PdfTask(tempFileList, callbackUrl)
                 .setDocumentComponent(this)
                 .setAttachmentService(attachmentService);
         CONVERT_TASK_MAP.put(convert2PdfTask.getTaskId(), convert2PdfTask);
         executor.submit(convert2PdfTask);
 
         return convert2PdfTask;
+    }
+
+    public List<Convert2PdfTaskVO> getWithTaskIds(List<String> taskIds) {
+        return taskIds.stream()
+                .filter(taskId -> CONVERT_TASK_MAP.containsKey(taskId))
+                .map(taskId -> BeanUtil.toBean(CONVERT_TASK_MAP.get(taskId), Convert2PdfTaskVO.class))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -101,7 +117,7 @@ public class DocumentComponent {
      * @return 临时file文件
      */
     private File getTempFile(MultipartFile multipartFile) {
-        String originalFilename = multipartFile.getOriginalFilename();
+        String originalFilename = new String(multipartFile.getOriginalFilename().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
         String suffix = FileUtil.getSuffix(originalFilename);
         String filePath = TEMP_DIR.concat(File.separator)
                 .concat(FileUtil.mainName(originalFilename)).concat(StringPool.DOT).concat(suffix);
