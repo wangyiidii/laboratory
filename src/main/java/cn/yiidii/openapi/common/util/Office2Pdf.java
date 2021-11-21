@@ -2,6 +2,7 @@ package cn.yiidii.openapi.common.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.free.model.ex.DocumentException;
 import com.aspose.cells.Workbook;
@@ -213,7 +214,7 @@ public class Office2Pdf {
 
     private void checkSlideLic() {
         try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("aspose/license.xml");
+            InputStream is = new ClassPathResource("aspose/license.xml").getStream();
             com.aspose.slides.License license = new com.aspose.slides.License();
             license.setLicense(is);
         } catch (Exception e) {
