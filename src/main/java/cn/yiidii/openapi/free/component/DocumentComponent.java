@@ -1,10 +1,13 @@
 package cn.yiidii.openapi.free.component;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.yiidii.openapi.common.util.Office2Pdf;
 import cn.yiidii.openapi.free.model.bo.office.Convert2PdfTask;
+import cn.yiidii.openapi.free.model.bo.office.OCRTask;
 import cn.yiidii.openapi.free.model.vo.Convert2PdfTaskVO;
+import cn.yiidii.openapi.free.model.vo.OCRTaskVO;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
 import cn.yiidii.openapi.oss.service.IAttachmentService;
 import cn.yiidii.pigeon.common.core.constant.StringPool;
@@ -36,6 +39,7 @@ public class DocumentComponent {
 
     private static final String TEMP_DIR = "./temp";
     private static final Map<String, Convert2PdfTask> CONVERT_TASK_MAP = Maps.newConcurrentMap();
+    private static final Map<String, OCRTask> OCR_TASK_MAP = Maps.newConcurrentMap();
 
     private final IAttachmentService attachmentService;
     private final ThreadPoolTaskExecutor executor;
@@ -76,8 +80,8 @@ public class DocumentComponent {
      * @param callbackUrl       回调地址
      * @return 附件
      */
-    public Convert2PdfTask toPdf(List<MultipartFile> multipartFileList, String callbackUrl) {
-        Assert.notNull(multipartFileList, "文件不能为空");
+    public Convert2PdfTaskVO toPdf(List<MultipartFile> multipartFileList, String callbackUrl) {
+        Assert.isTrue(CollUtil.isNotEmpty(multipartFileList), "文件不能为空");
 
         // 临时文件
         List<File> tempFileList = multipartFileList.stream().map(mf -> {
@@ -97,14 +101,65 @@ public class DocumentComponent {
         CONVERT_TASK_MAP.put(convert2PdfTask.getTaskId(), convert2PdfTask);
         executor.submit(convert2PdfTask);
 
-        return convert2PdfTask;
+        return BeanUtil.toBean(convert2PdfTask, Convert2PdfTaskVO.class);
     }
 
-    public List<Convert2PdfTaskVO> getWithTaskIds(List<String> taskIds) {
+    /**
+     * 根据taskId获取office文档转换为pdf的任务列表
+     *
+     * @param taskIds 任务id
+     * @return 任务列表
+     */
+    public List<Convert2PdfTaskVO> get2PDFTaskWithTaskIds(List<String> taskIds) {
         return taskIds.stream()
                 .filter(taskId -> CONVERT_TASK_MAP.containsKey(taskId))
                 .map(taskId -> BeanUtil.toBean(CONVERT_TASK_MAP.get(taskId), Convert2PdfTaskVO.class))
                 .sorted(Comparator.comparing(Convert2PdfTaskVO::getStartTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 带回调的OCR
+     *
+     * @param multipartFileList 文件列表
+     * @param callbackUrl       回调链接
+     * @return OCRTask
+     */
+    public OCRTaskVO ocr(List<MultipartFile> multipartFileList, String callbackUrl) {
+        Assert.isTrue(CollUtil.isNotEmpty(multipartFileList), "文件不能为空");
+
+        // 临时文件
+        List<File> tempFileList = multipartFileList.stream().map(mf -> {
+            File temp = getTempFile(mf);
+            try {
+                FileUtil.writeBytes(mf.getBytes(), temp);
+            } catch (IOException e) {
+                temp.delete();
+            }
+            return temp;
+        }).collect(Collectors.toList());
+
+        // 异步任务
+        OCRTask ocrTask = new OCRTask(tempFileList, callbackUrl)
+                .setDocumentComponent(this)
+                .setAttachmentService(attachmentService);
+        OCR_TASK_MAP.put(ocrTask.getTaskId(), ocrTask);
+        executor.submit(ocrTask);
+
+        return BeanUtil.toBean(ocrTask, OCRTaskVO.class);
+    }
+
+    /**
+     * 根据taskId获取OCR的任务列表
+     *
+     * @param taskIds 任务id
+     * @return 任务列表
+     */
+    public List<OCRTaskVO> getOCRTaskWithTaskId(List<String> taskIds) {
+        return taskIds.stream()
+                .filter(taskId -> OCR_TASK_MAP.containsKey(taskId))
+                .map(taskId -> BeanUtil.toBean(OCR_TASK_MAP.get(taskId), OCRTaskVO.class))
+                .sorted(Comparator.comparing(OCRTaskVO::getStartTime).reversed())
                 .collect(Collectors.toList());
     }
 
