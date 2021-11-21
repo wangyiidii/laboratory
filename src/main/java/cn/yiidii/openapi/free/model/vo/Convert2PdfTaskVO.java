@@ -64,5 +64,9 @@ public class Convert2PdfTaskVO {
         private String fileName;
         private Attachment attachment;
         private String remark;
+
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
+        private Long consumingTime;
     }
 }

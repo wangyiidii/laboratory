@@ -74,6 +74,7 @@ public class Convert2PdfTask implements Runnable {
 
         int failCount = 0;
         for (FileInfo fileInfo : this.fileInfos) {
+            fileInfo.setStartTime(LocalDateTime.now());
             fileInfo.setRemark("转换中");
             // 转换
             File resultFile;
@@ -82,6 +83,9 @@ public class Convert2PdfTask implements Runnable {
             } catch (Exception e) {
                 log.error("文件[{}]转换失败, e: {}", fileInfo.getFileName(), e.getMessage());
                 failCount++;
+
+                fileInfo.setEndTime(LocalDateTime.now());
+                fileInfo.setConsumingTime(Duration.between(fileInfo.startTime, fileInfo.endTime).toMillis());
 
                 String message = e.getMessage();
                 if (e instanceof UnsupportedDataTypeException) {
@@ -103,6 +107,8 @@ public class Convert2PdfTask implements Runnable {
                 log.error("文件[{}]转换失败, e: {}", fileInfo.getFileName(), e.getMessage());
                 failCount++;
 
+                fileInfo.setEndTime(LocalDateTime.now());
+                fileInfo.setConsumingTime(Duration.between(fileInfo.startTime, fileInfo.endTime).toMillis());
                 fileInfo.setRemark("上传至oss失败");
                 continue;
             } finally {
@@ -112,6 +118,8 @@ public class Convert2PdfTask implements Runnable {
 
             fileInfo.setAttachment(attachment);
             fileInfo.setRemark("转换成功");
+            fileInfo.setEndTime(LocalDateTime.now());
+            fileInfo.setConsumingTime(Duration.between(fileInfo.startTime, fileInfo.endTime).toMillis());
             log.info("文件[{}]转换成功", fileInfo.fileName);
         }
 
@@ -143,5 +151,9 @@ public class Convert2PdfTask implements Runnable {
         private String fileName;
         private Attachment attachment;
         private String remark = "暂无信息";
+
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
+        private Long consumingTime;
     }
 }

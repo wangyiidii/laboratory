@@ -4,17 +4,16 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.yiidii.openapi.common.util.Office2Pdf;
 import cn.yiidii.openapi.free.model.bo.office.Convert2PdfTask;
-import cn.yiidii.openapi.free.model.ex.DocumentException;
 import cn.yiidii.openapi.free.model.vo.Convert2PdfTaskVO;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
 import cn.yiidii.openapi.oss.service.IAttachmentService;
 import cn.yiidii.pigeon.common.core.constant.StringPool;
 import cn.yiidii.pigeon.common.core.exception.BizException;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -105,6 +104,7 @@ public class DocumentComponent {
         return taskIds.stream()
                 .filter(taskId -> CONVERT_TASK_MAP.containsKey(taskId))
                 .map(taskId -> BeanUtil.toBean(CONVERT_TASK_MAP.get(taskId), Convert2PdfTaskVO.class))
+                .sorted(Comparator.comparing(Convert2PdfTaskVO::getStartTime).reversed())
                 .collect(Collectors.toList());
     }
 
