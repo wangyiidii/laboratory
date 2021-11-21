@@ -214,7 +214,7 @@ public class Office2Pdf {
 
     private void checkSlideLic() {
         try {
-            InputStream is = new ClassPathResource("aspose/license.xml").getStream();
+            InputStream is = new ClassPathResource("classpath: aspose/license.xml").getStream();
             com.aspose.slides.License license = new com.aspose.slides.License();
             license.setLicense(is);
         } catch (Exception e) {
