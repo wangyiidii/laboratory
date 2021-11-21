@@ -2,7 +2,6 @@ package cn.yiidii.openapi.common.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
 import cn.yiidii.openapi.free.model.ex.DocumentException;
 import com.aspose.cells.Workbook;
@@ -41,8 +40,8 @@ public class Office2Pdf {
     private static final Set<String> PPT_SUFFIX;
 
     static {
-        DOC_SUFFIX = Sets.newHashSet("doc", "docx", "docm", "dotx", "dotm");
-        EXCEL_SUFFIX = Sets.newHashSet("xls", "xlsx", "xlsm", "xltx", "xltm", "xlsb", "xlam");
+        DOC_SUFFIX = Sets.newHashSet("doc", "docx", "docm", "dotx", "dotm", "txt");
+        EXCEL_SUFFIX = Sets.newHashSet("xls", "xlsx", "xlsm", "xltx", "xltm", "xlsb", "xlam", "csv");
         PPT_SUFFIX = Sets.newHashSet("ppt", "pptx", "pptm", "ppsx", "ppsm", "potx", "potm", "ppam");
     }
 
