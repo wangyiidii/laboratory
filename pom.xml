@@ -271,6 +271,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -284,30 +287,30 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.6.1</version>
-                <configuration>
-                    <protocExecutable>
-                        D:\wang\protoc-3.17.3-win64\bin\protoc.exe  <!-- 刚刚环境变量配置的位置 -->
-                    </protocExecutable>
-                    <pluginId>protoc-java</pluginId>
-                    <!-- proto文件放置的目录 -->
-                    <protoSourceRoot>${project.basedir}/src/main/java/cn/yiidii/openapi/netty</protoSourceRoot>
-                    <!-- 生成文件的目录 -->
-                    <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
-                    <!-- 生成文件前是否把目标目录清空，这个最好设置为false，以免误删项目文件 -->
-                    <clearOutputDirectory>false</clearOutputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.xolstice.maven.plugins</groupId>-->
+<!--                <artifactId>protobuf-maven-plugin</artifactId>-->
+<!--                <version>0.6.1</version>-->
+<!--                <configuration>-->
+<!--                    <protocExecutable>-->
+<!--                        D:\wang\protoc-3.17.3-win64\bin\protoc.exe  &lt;!&ndash; 刚刚环境变量配置的位置 &ndash;&gt;-->
+<!--                    </protocExecutable>-->
+<!--                    <pluginId>protoc-java</pluginId>-->
+<!--                    &lt;!&ndash; proto文件放置的目录 &ndash;&gt;-->
+<!--                    <protoSourceRoot>${project.basedir}/src/main/java/cn/yiidii/openapi/netty</protoSourceRoot>-->
+<!--                    &lt;!&ndash; 生成文件的目录 &ndash;&gt;-->
+<!--                    <outputDirectory>${project.basedir}/src/main/java</outputDirectory>-->
+<!--                    &lt;!&ndash; 生成文件前是否把目标目录清空，这个最好设置为false，以免误删项目文件 &ndash;&gt;-->
+<!--                    <clearOutputDirectory>false</clearOutputDirectory>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>compile</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
