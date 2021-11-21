@@ -81,7 +81,7 @@ public class OCRTask implements Runnable {
             try {
                 ocrResult = OCRUtil.ocr(fileInfo.getFile());
             } catch (Exception e) {
-                log.error("OCR失败, e: {}", fileInfo.getFileName(), e.getMessage());
+                log.error("OCR失败, e: {}", e.getMessage());
                 failCount++;
 
                 fileInfo.setEndTime(LocalDateTime.now());
