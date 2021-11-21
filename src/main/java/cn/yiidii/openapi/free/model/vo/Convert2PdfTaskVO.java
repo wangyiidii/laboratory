@@ -2,6 +2,7 @@ package cn.yiidii.openapi.free.model.vo;
 
 import cn.yiidii.openapi.free.model.bo.office.Convert2PdfTaskState;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,6 +37,20 @@ public class Convert2PdfTaskVO {
     private Convert2PdfTaskState state;
 
     /**
+     * 开始时间
+     */
+    private LocalDateTime startTime;
+
+    /**
+     * 结束时间
+     */
+    private LocalDateTime endTime;
+
+    /**
+     * 耗时 ms
+     */
+    private Long consumingTime;
+    /**
      * 文件
      */
     private List<FileInfoVO> fileInfos;
@@ -45,6 +60,7 @@ public class Convert2PdfTaskVO {
     @Accessors(chain = true)
     @EqualsAndHashCode
     protected static class FileInfoVO {
+
         private String fileName;
         private Attachment attachment;
         private String remark;

@@ -12,6 +12,8 @@ import cn.yiidii.openapi.oss.service.IAttachmentService;
 import cn.yiidii.pigeon.common.core.constant.StringPool;
 import com.alibaba.fastjson.JSON;
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +40,10 @@ public class Convert2PdfTask implements Runnable {
     private Convert2PdfTaskState state;
     private List<FileInfo> fileInfos;
 
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Long consumingTime;
+
     private DocumentComponent documentComponent;
     private IAttachmentService attachmentService;
 
@@ -45,6 +51,7 @@ public class Convert2PdfTask implements Runnable {
         super();
         this.taskId = DateUtil.formatDate(new Date()).concat(StringPool.DASH).concat(IdUtil.randomUUID());
         this.state = Convert2PdfTaskState.INIT;
+        this.startTime = LocalDateTime.now();
     }
 
     public Convert2PdfTask(List<File> fileList) {
@@ -71,9 +78,7 @@ public class Convert2PdfTask implements Runnable {
             // 转换
             File resultFile;
             try {
-                log.info(StrUtil.format("pre convert. fileName: {}", fileInfo.getFileName()));
                 resultFile = Office2Pdf.convert(fileInfo.getFile());
-                log.info(StrUtil.format("post convert. fileName: {}", fileInfo.getFileName()));
             } catch (Exception e) {
                 log.error("文件[{}]转换失败, e: {}", fileInfo.getFileName(), e.getMessage());
                 failCount++;
@@ -88,7 +93,6 @@ public class Convert2PdfTask implements Runnable {
                 // 删除临时文件
                 fileInfo.getFile().delete();
             }
-            log.info(StrUtil.format("convert success. fileName: {}", fileInfo.getFileName()));
 
             fileInfo.setRemark("上传中");
             // 上传oss
@@ -118,6 +122,8 @@ public class Convert2PdfTask implements Runnable {
         } else {
             this.setState(Convert2PdfTaskState.PART_SUCCESS);
         }
+        this.endTime = LocalDateTime.now();
+        this.consumingTime = Duration.between(this.startTime, this.endTime).toMillis();
 
         // callback
         if (StrUtil.isNotBlank(callbackUrl)) {
