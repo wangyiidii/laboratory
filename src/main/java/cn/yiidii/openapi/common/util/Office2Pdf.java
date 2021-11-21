@@ -130,8 +130,10 @@ public class Office2Pdf {
      * @return pdf
      */
     public static File ppt2Pdf(File file) {
+        log.info(StrUtil.format("office2pdf ppt2Pdf pre check lic. fileName: {}", file.getName()));
         // 检查license
         checkSlideLic();
+        log.info(StrUtil.format("office2pdf ppt2Pdf post check lic. fileName: {}", file.getName()));
 
         File pdfFile = FileUtil.file(getTempFilePath(file));
         BufferedOutputStream bos = null;
@@ -140,7 +142,9 @@ public class Office2Pdf {
             bos = FileUtil.getOutputStream(pdfFile);
             bis = FileUtil.getInputStream(file);
             Presentation pres = new Presentation(bis);
+            log.info(StrUtil.format("office2pdf ppt2Pdf pre save. fileName: {}", file.getName()));
             pres.save(bos, com.aspose.slides.SaveFormat.Pdf);
+            log.info(StrUtil.format("office2pdf ppt2Pdf post save. fileName: {}", file.getName()));
             return pdfFile;
         } catch (Exception e) {
             pdfFile.delete();
@@ -175,6 +179,7 @@ public class Office2Pdf {
         } else if (containsIgnoreCase(EXCEL_SUFFIX, suffix)) {
             return excel2Pdf(file);
         } else if (containsIgnoreCase(PPT_SUFFIX, suffix)) {
+            log.info(StrUtil.format("office2pdf convert pdf: {}", file.getName()));
             return ppt2Pdf(file);
         }
         throw new UnsupportedDataTypeException(StrUtil.format("file with suffix '{}' is not support", suffix));

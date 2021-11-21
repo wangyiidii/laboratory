@@ -71,7 +71,9 @@ public class Convert2PdfTask implements Runnable {
             // 转换
             File resultFile;
             try {
+                log.info(StrUtil.format("pre convert. fileName: {}", fileInfo.getFileName()));
                 resultFile = Office2Pdf.convert(fileInfo.getFile());
+                log.info(StrUtil.format("post convert. fileName: {}", fileInfo.getFileName()));
             } catch (Exception e) {
                 log.error("文件[{}]转换失败, e: {}", fileInfo.getFileName(), e.getMessage());
                 failCount++;
@@ -86,6 +88,7 @@ public class Convert2PdfTask implements Runnable {
                 // 删除临时文件
                 fileInfo.getFile().delete();
             }
+            log.info(StrUtil.format("convert success. fileName: {}", fileInfo.getFileName()));
 
             fileInfo.setRemark("上传中");
             // 上传oss
