@@ -45,7 +45,7 @@ public class XxlJobConfiguration {
      *
      * @return XxlJobExecutor
      */
-    @Bean(initMethod = "start", destroyMethod = "destroy")
+    @Bean
     public XxlJobExecutor xxlJobExecutor() {
         log.info(">>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobExecutor = new XxlJobSpringExecutor();
