@@ -47,7 +47,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -82,11 +81,6 @@
         <dependency>
             <groupId>cn.yiidii.pigeon</groupId>
             <artifactId>pigeon-starter-strategy</artifactId>
-            <version>${pigeon.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.yiidii.pigeon</groupId>
-            <artifactId>pigeon-starter-knife4j</artifactId>
             <version>${pigeon.common.version}</version>
         </dependency>
         <dependency>
@@ -126,11 +120,6 @@
             <version>${zxing.version}</version>
         </dependency>
         <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
-            <version>${UserAgentUtils.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
@@ -143,39 +132,17 @@
             <version>${netty-all.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-
         <!--netty-websocket-starter-->
-        <dependency>
-            <groupId>org.yeauty</groupId>
-            <artifactId>netty-websocket-spring-boot-starter</artifactId>
-            <version>${netty-websocket-starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>${commom-net.version}</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.yeauty</groupId>-->
+        <!--            <artifactId>netty-websocket-spring-boot-starter</artifactId>-->
+        <!--            <version>${netty-websocket-starter.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>${dom4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
         </dependency>
         <dependency>
             <groupId>com.xuxueli</groupId>
@@ -187,6 +154,7 @@
             <artifactId>aws-java-sdk-s3</artifactId>
         </dependency>
 
+        <!-- itextpdf -->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
@@ -198,23 +166,7 @@
             <version>${itext-asian.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>net.sourceforge.tess4j</groupId>
-            <artifactId>tess4j</artifactId>
-            <version>${tess4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jna</groupId>
-                    <artifactId>jna</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.10.0</version>
-        </dependency>
-
+        <!-- aspose -->
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-words</artifactId>
@@ -237,16 +189,16 @@
             <systemPath>${project.basedir}/lib/aspose.slides-15.9.0.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>${pdfbox.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>fontbox</artifactId>
-            <version>${pdfbox.version}</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.pdfbox</groupId>-->
+        <!--            <artifactId>pdfbox</artifactId>-->
+        <!--            <version>${pdfbox.version}</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.pdfbox</groupId>-->
+        <!--            <artifactId>fontbox</artifactId>-->
+        <!--            <version>${pdfbox.version}</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 

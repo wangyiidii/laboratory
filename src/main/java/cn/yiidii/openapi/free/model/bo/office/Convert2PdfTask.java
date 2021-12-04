@@ -7,7 +7,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.yiidii.openapi.common.util.Office2Pdf;
-import cn.yiidii.openapi.free.component.DocumentComponent;
+import cn.yiidii.openapi.free.component.document.DocumentComponent;
 import cn.yiidii.openapi.oss.model.entity.Attachment;
 import cn.yiidii.openapi.oss.service.IAttachmentService;
 import com.alibaba.fastjson.JSON;
