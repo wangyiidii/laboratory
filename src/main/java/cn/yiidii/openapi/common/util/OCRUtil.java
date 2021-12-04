@@ -41,6 +41,7 @@ public class OCRUtil {
         Tesseract instance = new Tesseract();
         instance.setTessVariable("user_defined_dpi", "300");
         String dataPath = SpringContextHolder.getApplicationContext().getEnvironment().getProperty("pigeon.orc.tess4jPath", "/data/tess4j/");
+        log.info("tess4j trained data path: {}", dataPath);
         instance.setDatapath(dataPath);
         // 设置中文简体训练库
         if (zh) {
