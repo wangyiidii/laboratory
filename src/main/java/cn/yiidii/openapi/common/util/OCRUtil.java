@@ -40,9 +40,10 @@ public class OCRUtil {
     public static String ocrImg(File imgFile, boolean zh) throws Exception {
         Tesseract instance = new Tesseract();
         instance.setTessVariable("user_defined_dpi", "300");
-        String dataPath = SpringContextHolder.getApplicationContext().getEnvironment().getProperty("pigeon.orc.tess4jPath", "/data/tess4j/");
+        String dataPath = SpringContextHolder.getApplicationContext().getEnvironment().getProperty("pigeon.ocr.tess4jPath", "/data/tess4j/");
         log.info("tess4j trained data path: {}", dataPath);
         instance.setDatapath(dataPath);
+        instance.setOcrEngineMode(0);
         // 设置中文简体训练库
         if (zh) {
             // 中文识别
