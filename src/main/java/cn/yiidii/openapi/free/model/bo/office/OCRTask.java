@@ -1,15 +1,15 @@
 package cn.yiidii.openapi.free.model.bo.office;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.yiidii.openapi.common.util.OCRUtil;
 import cn.yiidii.openapi.free.component.DocumentComponent;
 import cn.yiidii.openapi.free.model.ex.DocumentException;
 import cn.yiidii.openapi.oss.service.IAttachmentService;
-import cn.yiidii.pigeon.common.core.constant.StringPool;
 import com.alibaba.fastjson.JSON;
 import java.io.File;
 import java.time.Duration;
@@ -48,7 +48,7 @@ public class OCRTask implements Runnable {
 
     public OCRTask() {
         super();
-        this.taskId = DateUtil.formatDate(new Date()).concat(StringPool.DASH).concat(IdUtil.randomUUID());
+        this.taskId = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN).concat(RandomUtil.randomStringUpper(6));
         this.state = Convert2PdfTaskState.INIT;
         this.startTime = LocalDateTime.now();
     }
@@ -81,7 +81,7 @@ public class OCRTask implements Runnable {
             try {
                 ocrResult = OCRUtil.ocr(fileInfo.getFile());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("OCR失败, e: {}", e);
                 log.error("OCR失败, e: {}", e.getMessage());
                 failCount++;
 
