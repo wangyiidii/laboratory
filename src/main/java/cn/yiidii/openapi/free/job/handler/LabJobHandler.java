@@ -66,11 +66,12 @@ public class LabJobHandler {
                 e.setStep(step);
                 try {
                     miBrushStepComponent.brushStep(e, false);
+                    successCount.getAndIncrement();
+                    log.info(StrUtil.format("[{}]自动刷新{}步", e.getPhone(), e.getStep()));
                 } catch (Exception exception) {
                     log.error(StrUtil.format("{}自动刷新步数异常, e:{}", e.getPhone(), exception.getMessage()));
+                    redisOps.hdel(MiBrushStepComponent.KEY_MI_BRUSH_STEP_INFO, e.getPhone());
                 }
-                successCount.getAndIncrement();
-                log.info(StrUtil.format("[{}]自动刷新{}步", e.getPhone(), e.getStep()));
             });
 
             // 记录
