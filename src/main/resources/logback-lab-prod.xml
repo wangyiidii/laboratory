@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="logback/defaults-async.xml"/>
+    <root level="${log.level}">
+        <appender-ref ref="ALIYUN"/>
+    </root>
 </configuration>

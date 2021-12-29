@@ -57,6 +57,13 @@ pigeon:
     level: info
     type: 'MONGO'
     enabled: true
+    ali:
+      endpoint: cn-beijing.log.aliyuncs.com
+      accessKeyId: LTA***Tab
+      accessKeySecret: MR****5
+      project: lab
+      logStore: java
+      mdcFields: trace-id
   strategy:
     base-package: cn.yiidii.openapi
   netty:
