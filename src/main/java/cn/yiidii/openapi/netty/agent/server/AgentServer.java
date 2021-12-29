@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @create 2021-08-12 21:13
  */
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
 public class AgentServer {
 

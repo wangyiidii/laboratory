@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @author YiiDii Wang
  * @create 2021-08-13 09:41
  */
-@Component
+//@Component
 @Slf4j
 @RequiredArgsConstructor
 public class AgentServerInitializer extends ChannelInitializer<Channel> {

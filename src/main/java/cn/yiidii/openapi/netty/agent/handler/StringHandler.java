@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @create 2021-08-16 10:03
  */
 @Slf4j
-@Component
+//@Component
 public class StringHandler extends SimpleChannelInboundHandler<String> {
 
     @Override

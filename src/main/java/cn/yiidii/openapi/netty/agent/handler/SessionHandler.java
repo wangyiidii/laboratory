@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @create 2021-08-13 14:32
  */
 @Slf4j
-@Component
+//@Component
 public class SessionHandler extends ChannelDuplexHandler {
 
     @Override

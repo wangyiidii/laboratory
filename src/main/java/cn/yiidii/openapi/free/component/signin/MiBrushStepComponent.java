@@ -151,7 +151,6 @@ public class MiBrushStepComponent {
         try {
             step = Long.parseLong(redisOps.hget(KEY_MI_BRUSH_STEP_CHECK, form.getPhone()).toString());
         } catch (Exception e) {
-            e.printStackTrace();
         }
         if (form.getStep() <= step) {
             throw new BizException(StrUtil.format("今天已经刷新了{}步啦，加大步数试一试~", step));
