@@ -17,16 +17,12 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class JdInfo {
 
-    private String sToken;
+    private String gsalt;
     private String guid;
     private String lsId;
-    private String lsToken;
+    private String rsaModulus;
+
     private String preCookie;
-    private String oklToken;
-    private String token;
-    private String qrCodeUrl;
-    private String qrCodeBase64;
     private String cookie;
-    private String ua;
 
 }
